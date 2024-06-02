@@ -1,0 +1,13 @@
+# requirements for project satellite-crops
+
+# data exploration
+jupyterlab==4.2.0 #contains: requests, beautifulsoup4==4.12.3, boto3==1.34.113
+notebook==6.4.12 #contains: s3path, scikit-learn, scipy, pandas==2.2.2, numpy==1.26.4, plotly==5.22.0, openpyxl, matplotlib==3.9.0
+
+# data manipulation
+pandas==2.2.2
+numpy==1.26.4
+
+# data visualization
+plotly==5.22.0
+matplotlib==3.9.0

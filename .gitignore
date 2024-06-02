@@ -1,0 +1,36 @@
+
+# OS generated files #
+.DS_Store
+__MACOSX
+# Tests #
+.pytest_cache
+
+# Jupiter Notebook #
+*checkpoint.ipynb
+*.ipynb_checkpoints
+# Python #
+__pycache__
+.python-version
+
+# Data
+./data/*
+
+# Local env and credentials
+.env
+.envrc
+.venv*
+
+# IDE #
+*.vscode
+
+# inteliJ #
+.idea
+*.gz
+*PKG-INFO
+*.egg-info
+*.csv
+05-ML/**/*.txt
+06-Deep-Learning/**/*.txt
+*.zip
+mlruns
+*.sqlite
