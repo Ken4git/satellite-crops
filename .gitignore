@@ -13,7 +13,9 @@ __pycache__
 .python-version
 
 # Data
-./data/*
+data/*
+
+# notebooks/*
 
 # Local env and credentials
 .env
