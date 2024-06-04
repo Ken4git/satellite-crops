@@ -17,3 +17,7 @@ Les variables d'environnement sont accessibles via `from satellitecrops.params i
 ### SQLConnection
 
 `from satellitecrops.utils.sql_connector import SQLConnection`
+# Data sources
+
+https://geoservices.ign.fr/telechargement-api/RPG
+GPKG are SQLite files
