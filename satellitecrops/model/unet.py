@@ -4,7 +4,7 @@
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, concatenate, Conv2DTranspose, BatchNormalization, Dropout, Lambda
-
+from tensorflow.keras.metrics import MeanIoU
 
 ################################################################
 def unet(IMG_HEIGHT:int, IMG_WIDTH:int, IMG_CHANNELS:int, n_classes:int):
@@ -74,7 +74,7 @@ def unet(IMG_HEIGHT:int, IMG_WIDTH:int, IMG_CHANNELS:int, n_classes:int):
     outputs = Conv2D(n_classes, 1, activation='softmax', padding='same')(c9)
 
     model = Model(inputs=[inputs], outputs=[outputs])
-    model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy(), metrics=['accuracy'])
+    model.compile(optimizer='adam', loss=tf.keras.losses.CategoricalFocalCrossentropy(), metrics=[MeanIoU(num_classes=n_classes, sparse_y_pred=False, sparse_y_true=False)])
     model.summary()
 
     return model
