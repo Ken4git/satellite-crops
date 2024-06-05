@@ -25,8 +25,9 @@ def scaling(arr:list, pos:int, a:float=0, b:float=1):
     c = np.percentile(reflectance, 1)
     d = np.percentile(reflectance, 99)
 
-    for i in range(arr.shape[-1]):
-        band = reflectance[:,:,:,i]
+    for i in range(reflectance.shape[-1]):
+        slices = (slice(None),) * (reflectance.ndim - 1) + (1,)
+        band = reflectance[slices]
         normalized_band = (band - c) * (b - a) / (d-c) + a
         res.append(normalized_band)
 
