@@ -1,5 +1,6 @@
 from satellitecrops.params import *
 from google.cloud.sql.connector import Connector, IPTypes
+from geopandas.geoseries import GeoSeries
 
 import sqlalchemy
 
@@ -43,6 +44,35 @@ class SQLConnection:
             sqlalchemy.text(query)
         ).fetchall()
 
+
+    def get_parcelles_in_bbox(self: object, geometry: GeoSeries, crs: str) -> list:
+        """Get the parcelles contained in the bounding box passed as
+        bbox argument. Converts the polygon to the givien crs
+
+        Args:
+            geometry (GeoSeries): coordinates of the search zone
+
+            crs (str): CRS code for conversion
+
+        Returns:
+            list: All the parcelles contained in the bbox
+        """
+        query = """
+        SELECT * FROM parcelles_graphiques
+        WHERE geom && ST_MakeEnvelope(:minx, :miny, :maxx, :maxy, :crs)"""
+
+        bounds = geometry.bounds
+
+        params = dict(
+            minx=bounds.minx[0],
+            miny=bounds.miny[0],
+            maxx=bounds.maxx[0],
+            maxy=bounds.maxy[0],
+            crs=crs
+        )
+
+        return self.db_conn.execute(
+            sqlalchemy.text(query), params).fetchall()
 
 if __name__ == "__main__":
     connector = SQLConnection()
