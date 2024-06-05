@@ -61,7 +61,7 @@ class SQLConnection:
         SELECT * FROM parcelles_graphiques
         WHERE geom && ST_MakeEnvelope(:minx, :miny, :maxx, :maxy, :crs)"""
 
-        bounds = geometry.bounds
+        bounds = geometry.to_crs(crs).bounds
 
         params = dict(
             minx=bounds.minx[0],
@@ -70,7 +70,6 @@ class SQLConnection:
             maxy=bounds.maxy[0],
             crs=crs
         )
-
         return self.db_conn.execute(
             sqlalchemy.text(query), params).fetchall()
 
