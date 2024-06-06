@@ -15,7 +15,7 @@ __pycache__
 # Data
 data/*
 
-# notebooks/*
+notebooks/eoexecution*
 
 # Local env and credentials
 .env

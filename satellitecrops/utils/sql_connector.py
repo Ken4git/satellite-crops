@@ -2,6 +2,7 @@ from satellitecrops.params import *
 from google.cloud.sql.connector import Connector, IPTypes
 from geopandas.geoseries import GeoSeries
 
+import geopandas as gpd
 import sqlalchemy
 
 class SQLConnection:
@@ -57,21 +58,22 @@ class SQLConnection:
         Returns:
             list: All the parcelles contained in the bbox
         """
-        query = """
-        SELECT * FROM parcelles_graphiques
-        WHERE geom && ST_MakeEnvelope(:minx, :miny, :maxx, :maxy, :crs)"""
-
         bounds = geometry.to_crs(crs).bounds
 
-        params = dict(
-            minx=bounds.minx[0],
-            miny=bounds.miny[0],
-            maxx=bounds.maxx[0],
-            maxy=bounds.maxy[0],
-            crs=crs
-        )
-        return self.db_conn.execute(
-            sqlalchemy.text(query), params).fetchall()
+        query = f"""
+        SELECT * FROM parcelles_graphiques
+        WHERE geom && ST_MakeEnvelope({bounds.minx[0]}, {bounds.miny[0]}, {bounds.maxx[0]}, {bounds.maxy[0]}, {crs})"""
+
+
+
+        # params = dict(
+        #     minx=bounds.minx[0],
+        #     miny=bounds.miny[0],
+        #     maxx=bounds.maxx[0],
+        #     maxy=bounds.maxy[0],
+        #     crs=crs
+        # )
+        return gpd.GeoDataFrame.from_postgis(sqlalchemy.text(query), self.db_conn)
 
 if __name__ == "__main__":
     connector = SQLConnection()

@@ -1,28 +1,3 @@
-<<<<<<< HEAD
-# requirements for project satellite-crops
-# python 3.12.3
-
-# data exploration
-jupyterlab==4.2.0 #contains: requests, beautifulsoup4==4.12.3, boto3==1.34.113
-notebook==6.4.12 #contains: s3path, scikit-learn, scipy, pandas==2.2.2, numpy==1.26.4, plotly==5.22.0, openpyxl, matplotlib==3.9.0
-
-# data manipulation
-pandas==2.2.2
-numpy==1.26.4
-
-# data visualization
-plotly==5.22.0
-matplotlib==3.9.0
-
-# geodata manipulation
-eo-learn
-eo-learn[EXTRA]
-eo-learn[VISUALIZATION]
-geopandas
-sentinelhub
-
-# sudo apt install graphviz
-=======
 affine==2.4.0
 aiohttp==3.9.5
 aiosignal==1.3.1
@@ -175,4 +150,3 @@ webencodings==0.5.1
 websocket-client==1.8.0
 xyzservices==2024.4.0
 yarl==1.9.4
->>>>>>> main
