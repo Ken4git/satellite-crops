@@ -35,7 +35,7 @@ def train(
     # Create train and test set
     X , y = create_Xy(path)
     y_cat = tf.keras.utils.to_categorical(y)
-    X_scaled = scaling(X) # Don't forget to indicate position of the channel
+    X_scaled = scaling(X, 3)
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
 
     n_classes = len(y)
