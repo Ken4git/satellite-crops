@@ -183,6 +183,8 @@ def add_sat_patch_to_eopatch(eopatches_files, sat_patch):
         eopatch = EOPatch.load(eo_file_path, lazy_loading=True)
         new_eopatch = add_data2subpatch(sat_patch, eopatch)
         new_eopatch.save(eo_file_path, overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
+        del new_eopatch
+        del eopatch
 
 def main():
     init_env()
