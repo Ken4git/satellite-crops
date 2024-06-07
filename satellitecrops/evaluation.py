@@ -6,13 +6,14 @@ import matplotlib as mpl
 import numpy as np
 import pandas as pd
 
-def metrics(n_classes:int, sparse_y_pred:bool=False, sparse_y_true:bool=False):
+def metrics(n_classes:int, ignore_class:int=None, sparse_y_pred:bool=False, sparse_y_true:bool=False):
     '''
     Returns a list of metrics containing the mean Intersection-Over-Union metric (meanIoU) and the IoU for each predicted class.
 
     n_classes: The possible number of labels the prediction task can have.
     sparse_y_pred: Whether predictions are encoded using integers or dense floating point vectors.
     sparse_y_true: Whether labels are encoded using integers or dense floating point vectors.
+    ignore_class: Optional integer. The ID of a class to be ignored during meanIoU computation.
     '''
 
     l = [MeanIoU(num_classes=n_classes, sparse_y_pred=sparse_y_pred, sparse_y_true=sparse_y_true)]
