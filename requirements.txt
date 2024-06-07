@@ -21,3 +21,4 @@ geopandas
 sentinelhub
 
 # sudo apt install graphviz
+google-cloud-storage
