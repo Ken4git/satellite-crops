@@ -140,7 +140,7 @@ def make_and_run_workflow(parcelles_path, bbox_list, resolution=10):
     save_node = workflow_nodes[-1]
     exec_args = []
 
-    for idx, bbox in enumerate(bbox_list[np.arange(0, 10, 1)]):
+    for idx, bbox in enumerate(bbox_list):
         exec_args.append(
             {
                 input_node: {"bbox": bbox},
