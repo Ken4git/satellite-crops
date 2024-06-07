@@ -1,25 +1,36 @@
-#Source of the model = https://youtu.be/csFGTLT6_WQ
-# u-net model
-
+import numpy as np
 import tensorflow as tf
-from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, concatenate, Conv2DTranspose, BatchNormalization, Dropout, Lambda
-from tensorflow.keras.metrics import MeanIoU
+from tensorflow.keras.callbacks import EarlyStopping
+from keras import Model
 
-################################################################
-def unet(IMG_HEIGHT:int, IMG_WIDTH:int, IMG_CHANNELS:int, n_classes:int):
+from typing import Tuple
+from colorama import Fore, Style
+
+from satellitecrops.evaluation import metrics
+
+
+def unet(n_classes:int,
+         img_height:int,
+         img_width:int,
+         img_channels:int,
+         optimizer='adam',
+         alpha:float=0.25,
+         gamma:float=2.0
+         ):
     '''
-    Unet model. Build the model with encoding and decoding part. Compile the model.
-    IMG_HEIGHT : Height of each individual image
-    IMG_WIDTH : Width of each individual image
-    IMG_CHANNELS : Number of channels (ie number of bands of the image)
-    n_classes : Number of classes we want to predict
+    Initialize and compile a Unet model. Source of model architecture (https://youtu.be/csFGTLT6_WQ).
+
+    n_classes: The possible number of labels the prediction task can have.
+    img_height: Height of the image.
+    img_width: Width of the image.
+    img_channels: Number of bands used to predict.
+    optimizer: Optimizer used to compile.
+    alpha: Categorical focal loss parameter. A weight balancing factor for all classes, default is 0.25 as mentioned in the reference. It can be a list of floats or a scalar. In the multi-class case, alpha may be set by inverse class frequency by using compute_class_weight from sklearn.utils.
+    gamma: Categorical focal loss parameter. A focusing parameter, default is 2.0 as mentioned in the reference. It helps to gradually reduce the importance given to simple (easy) examples in a smooth manner.
     '''
 
-    #Build the model
-    inputs = Input((IMG_HEIGHT, IMG_WIDTH, IMG_CHANNELS))
-    #s = Lambda(lambda x: x / 255)(inputs)   #No need for this if we normalize our inputs beforehand
-    s = inputs
+    s = Input((img_height, img_width, img_channels))
 
     #Contraction path
     c1 = Conv2D(16, (3, 3), activation='relu', kernel_initializer='he_normal', padding='same')(s)
@@ -73,8 +84,45 @@ def unet(IMG_HEIGHT:int, IMG_WIDTH:int, IMG_CHANNELS:int, n_classes:int):
 
     outputs = Conv2D(n_classes, 1, activation='softmax', padding='same')(c9)
 
-    model = Model(inputs=[inputs], outputs=[outputs])
-    model.compile(optimizer='adam', loss=tf.keras.losses.CategoricalFocalCrossentropy(), metrics=[MeanIoU(num_classes=n_classes, sparse_y_pred=False, sparse_y_true=False)])
+    model = Model(inputs=[s], outputs=[outputs])
+    model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalFocalCrossentropy(alpha=alpha,gamma=gamma), metrics=metrics(n_classes))
     model.summary()
 
     return model
+
+
+def train_model(
+        model: Model,
+        X: np.ndarray,
+        y: np.ndarray,
+        batch_size=16,
+        patience=5,
+        validation_data=None, # overrides validation_split
+        validation_split=0.2
+    ) -> Tuple[Model, dict]:
+    """
+    Fit the model and return a tuple (fitted_model, history)
+    """
+    print(Fore.BLUE + "\nTraining model..." + Style.RESET_ALL)
+
+    es = EarlyStopping(
+        monitor="val_loss",
+        patience=patience,
+        restore_best_weights=True,
+        verbose=0
+    )
+
+    history = model.fit(
+        X,
+        y,
+        validation_data=validation_data,
+        validation_split=validation_split,
+        epochs=100,
+        batch_size=batch_size,
+        callbacks=[es],
+        verbose=0
+    )
+
+    print(f"✅ Model trained on {len(X)} rows with min val meanIoU: {round(np.min(history.history['mean_io_u']), 2)}")
+
+    return model, history
