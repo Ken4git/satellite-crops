@@ -1,7 +1,13 @@
+# Credential
+.secrets
 
 # OS generated files #
 .DS_Store
 __MACOSX
+
+# Download generated files
+*Zone.Identifier
+
 # Tests #
 .pytest_cache
 
@@ -14,6 +20,7 @@ __pycache__
 
 # Data
 data/*
+results/*
 
 # notebooks/*
 
