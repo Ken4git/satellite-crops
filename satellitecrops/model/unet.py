@@ -91,8 +91,7 @@ def unet(n_classes:int,
     return model
 
 
-def train_model(
-        model: Model,
+def train_model(model: Model,
         X: np.ndarray,
         y: np.ndarray,
         batch_size=16,

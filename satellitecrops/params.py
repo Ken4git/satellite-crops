@@ -4,7 +4,10 @@ import os
 
 GCP_PROJECT_NAME = os.environ.get("GCP_PROJECT_NAME")
 GCP_REGION = os.environ.get("GCP_REGION")
+BUCKET_NAME = os.environ.get("BUCKET_NAME")
 
+MODEL_TARGET = os.environ.get("MODEL_TARGET")
+LOCAL_REGISTRY_PATH = os.path.join(os.path.expanduser('~'), ".lewagon", "satellite-crops", "training_outputs")
 
 ### POSTGRES SQL ###
 
@@ -13,6 +16,9 @@ DB_USER = os.environ.get("DB_USER")
 DB_PASS = os.environ.get("DB_PASS")
 DB_NAME = os.environ.get("DB_NAME")
 DB_INSTANCE = os.environ.get("DB_INSTANCE")
+
+
+
 MAPPING = {'Blé tendre d’hiver': 'Blé ',
  'Blé tendre de printemps': 'Blé ',
  'Maïs doux': 'Maïs',
@@ -361,5 +367,3 @@ MAPPING = {'Blé tendre d’hiver': 'Blé ',
  'Truffière (chênaie de plants mycorhizés)': 'Prairie / Jachère',
  'Vétiver': 'Prairie / Jachère',
  'Culture inconnue': 'Prairie / Jachère'}
-
-print(MAPPING['Lupin fourrager d’hiver implanté pour la récolte 2015'])
