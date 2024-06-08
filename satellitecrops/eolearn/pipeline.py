@@ -155,6 +155,20 @@ def make_and_run_workflow(parcelles_path, bbox_list, resolution=10):
 
 
 def add_data2subpatch(sat_patch, eopatch):
+    '''Creates a new eopatch, which is eopatch enriched with sat_patch data
+
+    Parameters:
+    sat_patch (eopatch): an eopatch which contains the data to add
+    eopatch (eopatch): the "subpatch" (small eopatch) you want to add data to
+
+    Returns:
+    eopatch: a new eopatch, which is eopatch enriched with sat_patch data
+
+    Example:
+    for instance eopatch contains mask_timeless and sat_patch contains
+    data or data_timeless, this data will be added to the eopatch,
+    a new eopatch is returned
+    '''
     # Find the pixel indices corresponding to the small_bbox
     height, width = sat_patch.data_timeless['BANDS'].shape[-2:]
 
