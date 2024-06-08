@@ -62,14 +62,14 @@ def get_zone_to_patch(bucket):
     print(f"✅ Departement zone loaded")
     return gpd.GeoDataFrame(geometry=[geojson_data["geometry"]], crs=4326)
 
-def get_sat_image(bands=1):
+def get_sat_image(bucket, bands=1):
     print(Fore.MAGENTA + "\n⏳ Loading satellite image of the zone" + Style.RESET_ALL)
     file_path = os.path.join(DATA_PATH, "out_image.jp2")
     with rasterio.open(file_path) as mosaic_data:
         sat_bounds = mosaic_data.bounds
-        sat_image = mosaic_data.read(bands)
+        sat_image = mosaic_data.read()
     print(f"✅ Satellite image loaded")
-    return sat_bounds, np.expand_dims(sat_image, 0)
+    return sat_bounds, sat_image
 
 def create_bbox_of_zone(zone, resolution=10, patch_dim=256):
     print(Fore.MAGENTA + "\n⏳ Creating BBox of the departement" + Style.RESET_ALL)
@@ -140,7 +140,7 @@ def make_and_run_workflow(parcelles_path, bbox_list, resolution=10):
     save_node = workflow_nodes[-1]
     exec_args = []
 
-    for idx, bbox in enumerate(bbox_list[np.arange(0, 10, 1)]):
+    for idx, bbox in enumerate(bbox_list):
         exec_args.append(
             {
                 input_node: {"bbox": bbox},
@@ -210,6 +210,8 @@ def add_sat_patch_to_eopatch(eopatches_files, sat_patch):
         eopatch = EOPatch.load(eo_file_path, lazy_loading=True)
         new_eopatch = add_data2subpatch(sat_patch, eopatch)
         new_eopatch.save(eo_file_path, overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
+        del new_eopatch
+        del eopatch
 
 def main():
     init_env()
@@ -220,7 +222,7 @@ def main():
 
     bbox_list, info_list = create_bbox_of_zone(dpt_zone)
 
-    sat_bounds, sat_image = get_sat_image()
+    sat_bounds, sat_image = get_sat_image(bucket, 3)
 
     sat_patch = create_sat_eopatch(sat_bounds, sat_image)
 
