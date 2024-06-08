@@ -192,6 +192,19 @@ def add_data2subpatch(sat_patch, eopatch):
     return new_eopatch
 
 def add_sat_patch_to_eopatch(eopatches_files, sat_patch):
+    '''Update eopatches files with sat_patch data
+
+    Parameters:
+    sat_patch (eopatch): an eopatch which contains the data to add
+    eopatches_files (list): list of pathes to eopatches in EOPATCH_FOLDER,
+    the eopatches being the small eopatches you want to add data to
+
+    Returns:
+    nothing returned
+
+    See add_data2subpatch(sat_patch, eopatch) function to see how the data is
+    added to each subpatch
+    '''
     for eo_file in eopatches_files:
         eo_file_path = os.path.join(EOPATCH_FOLDER, eo_file)
         eopatch = EOPatch.load(eo_file_path, lazy_loading=True)
