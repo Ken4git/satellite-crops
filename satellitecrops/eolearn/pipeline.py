@@ -24,7 +24,7 @@ from rasterio.plot import show
 from rasterio.merge import merge
 
 ### eolearn tools
-from enrich_eopatches import add_sat_patch_to_eopatch
+# from satellitecrops.eolearn.enrich_eopatches import add_sat_patch_to_eopatch
 
 ### EO-Learn / SentinelHub ###
 from sentinelhub import BBox, CRS, BBoxSplitter, TileSplitter
@@ -114,7 +114,10 @@ def get_parcelles_from_db(zone):
     if not os.path.isfile(parcelles_path):
         conn = SQLConnection()
         parcelles_df = conn.get_parcelles_in_bbox(zone.geometry, 2154)
-        parcelles_df["code_group"] = parcelles_df.code_group.astype("int64")
+        # parcelles_df["code_group"] = parcelles_df.code_group.astype("int64")
+        parcelles_df["id_group"] = [0] * len(parcelles_df)
+        for code in MAPPING["CODE CULTURE"]:
+            parcelles_df.loc[parcelles_df["code_cultu"] == code, 'id_group'] = MAPPING[MAPPING["CODE CULTURE"] == code].id.iloc[0]
         parcelles_df.to_file(parcelles_path)
     print(f"✅ Parcelles loaded locally")
     return parcelles_path

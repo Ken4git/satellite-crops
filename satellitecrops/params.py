@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 
 ### GCP ###
 
@@ -380,6 +381,8 @@ LABELS = {0: 'Betterave',
             11: 'Protéagineux',
             12: 'Tournesol',
             13: 'Vergers'}
+
+MAPPING = pd.read_csv("./mapping_crops.csv")
 ### EO LEARN ###
 
 DPT = os.environ.get("DPT")
