@@ -9,7 +9,7 @@ import sys
 ### eolearn tools
 from satellitecrops.eolearn.eolearn_workflow import make_and_run_workflow
 from satellitecrops.eolearn.create_eopatches import get_zone_to_patch, create_bbox_of_zone, get_parcelles_from_db, zone2sat_patch
-from satellitecrops.eolearn.enrich_eopatches import add_sat_patch_to_eopatch
+from satellitecrops.eolearn.enrich_eopatches import add_sat_patch_to_eopatch, add_sat_patches_to_eopatch
 from satellitecrops.utils.sql_connector import SQLConnection
 from satellitecrops.params import *
 from satellitecrops.utils.bucket import BucketConnector
@@ -50,6 +50,12 @@ def main():
     sat_patch = zone2sat_patch(bucket)
     add_sat_patch_to_eopatch(os.listdir(EOPATCH_FOLDER), sat_patch)
 
+
+def main_local():
+    init_env()
+    print(Fore.MAGENTA + "\n⏳ Loading satellite image of the zone" + Style.RESET_ALL)
+    sat_dir_path = os.path.join(DATA_PATH, "sat_images")
+    add_sat_patches_to_eopatch(os.listdir(EOPATCH_FOLDER), sat_dir_path)
 
 if __name__ == "__main__":
     main()

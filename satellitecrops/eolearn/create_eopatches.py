@@ -4,6 +4,10 @@ from eolearn.core import (
     EOPatch
     )
 
+import geojson
+import rasterio
+import os
+
 from colorama import Fore, Style
 
 

@@ -1,12 +1,17 @@
 ### ML
 import numpy as np
 
+import os
+
 ### EO-Learn / SentinelHub ###
 from sentinelhub import BBox
 from eolearn.core import (
-    EOPatch
+    EOPatch,
+    OverwritePermission
     )
-
+# geom manipulation
+import rasterio
+from shapely.geometry import box
 
 def add_data2subpatch(sat_patch, eopatch):
     '''Creates a new eopatch, which is eopatch enriched with sat_patch data
@@ -66,3 +71,34 @@ def add_sat_patch_to_eopatch(eopatches_files, sat_patch):
         new_eopatch.save(eo_file_path, overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
         del new_eopatch
         del eopatch
+
+def add_data_from_sat_patches_to_eopatches(eopatches_files, sat_patches_files):
+    '''Update eopatches files with sat_patch data from multiple files
+
+    Parameters:
+    sat_patch_files (list): list of pathes to eopatches which contains the data to add
+    eopatches_files (list): list of pathes to eopatches in EOPATCH_FOLDER,
+    the eopatches being the small eopatches you want to add data to
+
+    Returns:
+    nothing returned
+
+    See add_data2subpatch(sat_patch, eopatch) function to see how the data is
+    added to each subpatch
+    '''
+    sat_patches = []
+    for file_path in sat_patches_files:
+        with rasterio.open(file_path) as mosaic_data:
+            sat_geom = box(*mosaic_data.bounds)
+            sat_data = mosaic_data.read()
+        sat_patches.append({"geom": sat_geom, "data": sat_data})
+    for eo_file in eopatches_files:
+        eo_file_path = os.path.join(EOPATCH_FOLDER, eo_file)
+        eopatch = EOPatch.load(eo_file_path, lazy_loading=True)
+        for sat_patch in sat_patches:
+            if sat_patch['geom'].contains(eopatch.bbox.geometry):
+                new_eopatch = add_data2subpatch(sat_patch, eopatch)
+                new_eopatch.save(eo_file_path, overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
+                del new_eopatch
+                del eopatch
+                break
