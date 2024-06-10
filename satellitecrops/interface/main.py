@@ -9,7 +9,7 @@ from satellitecrops.params import *
 from satellitecrops.model.unet import unet, train_model
 from satellitecrops.registry import save_model, save_results
 from satellitecrops.data import create_Xy
-from satellitecrops.preproc import scaling
+from satellitecrops.preproc import scaling, clean_y
 
 
 def train(
@@ -35,6 +35,7 @@ def train(
 
     # Create train and test set
     X , y = create_Xy(path)
+    y = clean_y(y)
     y_cat = tf.keras.utils.to_categorical(y)
     X_scaled = scaling(X, 1)
     X_scaled = np.moveaxis(X_scaled, 1, 3)

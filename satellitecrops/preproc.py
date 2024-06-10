@@ -40,3 +40,15 @@ def scaling(arr:list,
         return np.clip(np.stack(res, axis=pos),0,1)
 
     return np.stack(res, axis=pos)
+
+def clean_y(y:np.ndarray):
+    d = {}
+
+    for i in range(len(np.unique(y))):
+        if i != y[i]:
+            d[y[i]] = i
+
+    for k,v in d.items():
+        y[y==k] = v
+
+    return y
