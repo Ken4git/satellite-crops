@@ -16,7 +16,7 @@ def create_Xy(path:str):
             if name == 'MASK.npy.gz':
                 Y_path.append(os.path.join(root, name))
 
-    print(len(X_path), len(Y_path))
+    # print(len(X_path), len(Y_path))
 
     X = []
     y = []
@@ -24,7 +24,7 @@ def create_Xy(path:str):
     # Unzip
     for i,x_path in enumerate(X_path):
         with gzip.open(x_path) as f:
-            print(i)
+            # print(i)
             X.append(np.load(f))
             f.close()
 
