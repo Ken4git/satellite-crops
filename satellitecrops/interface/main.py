@@ -35,10 +35,14 @@ def train(
 
     # Create train and test set
     X , y = create_Xy(path)
+    print(X.shape, y.shape)
     y = clean_y(y)
+    print(X.shape, y.shape)
     y_cat = tf.keras.utils.to_categorical(y)
+    print(X.shape, y.shape)
     X_scaled = scaling(X, 1)
     X_scaled = np.moveaxis(X_scaled, 1, 3)
+    print(X.shape, y.shape)
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
 
     n_classes = len(np.unique(y))
