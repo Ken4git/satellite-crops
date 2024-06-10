@@ -18,7 +18,7 @@ DB_PASS = os.environ.get("DB_PASS")
 DB_NAME = os.environ.get("DB_NAME")
 DB_INSTANCE = os.environ.get("DB_INSTANCE")
 
-MAPPING = {'Blé tendre d’hiver': 'Blé ',
+# MAPPING = {'Blé tendre d’hiver': 'Blé ',
  'Blé tendre de printemps': 'Blé ',
  'Maïs doux': 'Maïs',
  'Maïs ensilage': 'Maïs',
@@ -383,6 +383,7 @@ LABELS = {0: 'Betterave',
             13: 'Vergers'}
 
 MAPPING = pd.read_csv("./mapping_crops.csv")
+print(MAPPING)
 ### EO LEARN ###
 
 DPT = os.environ.get("DPT")

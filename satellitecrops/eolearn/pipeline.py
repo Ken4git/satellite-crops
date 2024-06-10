@@ -116,6 +116,7 @@ def get_parcelles_from_db(zone):
         parcelles_df = conn.get_parcelles_in_bbox(zone.geometry, 2154)
         # parcelles_df["code_group"] = parcelles_df.code_group.astype("int64")
         parcelles_df["id_group"] = [0] * len(parcelles_df)
+        print(MAPPING)
         for code in MAPPING["CODE CULTURE"]:
             parcelles_df.loc[parcelles_df["code_cultu"] == code, 'id_group'] = MAPPING[MAPPING["CODE CULTURE"] == code].id.iloc[0]
         parcelles_df.to_file(parcelles_path)
@@ -201,13 +202,14 @@ def main():
 
     bbox_list, info_list = create_bbox_of_zone(dpt_zone)
 
+    parcelles_path = get_parcelles_from_db(dpt_zone)
+
     sat_bounds, sat_image = get_sat_image(bucket, 3)
 
     sat_patch = create_sat_eopatch(sat_bounds, sat_image)
 
     # bbox_gdf = create_bbox_gdf(bbox_list, info_list)
 
-    parcelles_path = get_parcelles_from_db(dpt_zone)
 
     make_and_run_workflow(parcelles_path, bbox_list)
 
