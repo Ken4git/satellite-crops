@@ -23,6 +23,9 @@ import matplotlib.pyplot as plt
 from rasterio.plot import show
 from rasterio.merge import merge
 
+### eolearn tools
+from enrich_eopatches import add_sat_patch_to_eopatch
+
 ### EO-Learn / SentinelHub ###
 from sentinelhub import BBox, CRS, BBoxSplitter, TileSplitter
 from eolearn.core import (
@@ -62,14 +65,14 @@ def get_zone_to_patch(bucket):
     print(f"✅ Departement zone loaded")
     return gpd.GeoDataFrame(geometry=[geojson_data["geometry"]], crs=4326)
 
-def get_sat_image(bands=1):
+def get_sat_image(bucket, bands=1):
     print(Fore.MAGENTA + "\n⏳ Loading satellite image of the zone" + Style.RESET_ALL)
     file_path = os.path.join(DATA_PATH, "out_image.jp2")
     with rasterio.open(file_path) as mosaic_data:
         sat_bounds = mosaic_data.bounds
-        sat_image = mosaic_data.read(bands)
+        sat_image = mosaic_data.read()
     print(f"✅ Satellite image loaded")
-    return sat_bounds, np.expand_dims(sat_image, 0)
+    return sat_bounds, sat_image
 
 def create_bbox_of_zone(zone, resolution=10, patch_dim=256):
     print(Fore.MAGENTA + "\n⏳ Creating BBox of the departement" + Style.RESET_ALL)
@@ -140,7 +143,7 @@ def make_and_run_workflow(parcelles_path, bbox_list, resolution=10):
     save_node = workflow_nodes[-1]
     exec_args = []
 
-    for idx, bbox in enumerate(bbox_list[np.arange(0, 10, 1)]):
+    for idx, bbox in enumerate(bbox_list):
         exec_args.append(
             {
                 input_node: {"bbox": bbox},
@@ -154,36 +157,6 @@ def make_and_run_workflow(parcelles_path, bbox_list, resolution=10):
     print(f"✅ Workflow Done !")
 
 
-def add_data2subpatch(sat_patch, eopatch):
-    # Find the pixel indices corresponding to the small_bbox
-    height, width = sat_patch.data_timeless['BANDS'].shape[-2:]
-
-    min_x, min_y = eopatch.bbox.lower_left
-    max_x, max_y = eopatch.bbox.upper_right
-    patch_min_x, patch_min_y = sat_patch.bbox.lower_left
-    patch_max_x, patch_max_y = sat_patch.bbox.upper_right
-    # compute coord of each pixel of sat_patch
-    x_pxl_coord = np.linspace(patch_min_x, patch_max_x, width)
-    y_pxl_coord = np.linspace(patch_min_y, patch_max_y, height)
-    x_min_idx = np.searchsorted(x_pxl_coord, min_x)
-    x_max_idx = np.searchsorted(x_pxl_coord, max_x)
-    y_min_idx = np.searchsorted(y_pxl_coord, min_y)
-    y_max_idx = np.searchsorted(y_pxl_coord, max_y)
-    # Copy data features
-    new_eopatch = EOPatch(bbox=BBox(bbox=(min_x, min_y, max_x, max_y), crs=LOCAL_CRS))
-
-    for feature_type, feature_name in sat_patch.get_features():
-        if feature_type.is_spatial():
-            new_eopatch[feature_type][feature_name] = sat_patch[feature_type][feature_name][:,height-y_max_idx:height-y_min_idx, x_min_idx:x_max_idx]
-    return new_eopatch
-
-def add_sat_patch_to_eopatch(eopatches_files, sat_patch):
-    for eo_file in eopatches_files:
-        eo_file_path = os.path.join(EOPATCH_FOLDER, eo_file)
-        eopatch = EOPatch.load(eo_file_path, lazy_loading=True)
-        new_eopatch = add_data2subpatch(sat_patch, eopatch)
-        new_eopatch.save(eo_file_path, overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
-
 def main():
     init_env()
 
@@ -193,7 +166,7 @@ def main():
 
     bbox_list, info_list = create_bbox_of_zone(dpt_zone)
 
-    sat_bounds, sat_image = get_sat_image()
+    sat_bounds, sat_image = get_sat_image(bucket, 3)
 
     sat_patch = create_sat_eopatch(sat_bounds, sat_image)
 
