@@ -6,6 +6,8 @@ def create_Xy(path:str):
     '''
     Create X and y from eopatches.
     '''
+
+    print('Creating X and y ...')
     X_path = []
     Y_path = []
 
@@ -15,8 +17,6 @@ def create_Xy(path:str):
                 X_path.append(os.path.join(root, name))
             if name == 'MASK.npy.gz':
                 Y_path.append(os.path.join(root, name))
-
-    print(len(X_path), len(Y_path))
 
     X = []
     y = []
@@ -35,5 +35,7 @@ def create_Xy(path:str):
 
     y = np.stack(y)
     X = np.stack(X)
+
+    print('X and y created ... ')
 
     return X , y
