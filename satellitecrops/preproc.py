@@ -45,7 +45,7 @@ def clean_y(y:np.ndarray):
     d = {}
 
     for i in range(len(np.unique(y))):
-        if i != np.unique(y):
+        if i != np.unique(y)[i]:
             d[y[i]] = i
 
     for k,v in d.items():
