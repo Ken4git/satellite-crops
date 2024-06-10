@@ -35,16 +35,17 @@ def get_img_coordinates(path):
         )
         return zone_coordinate
 
-
-def main():
+def create_patches_from_parcelles():
     init_env()
     bucket = BucketConnector()
-
     dpt_zone = get_zone_to_patch(bucket).to_crs(LOCAL_CRS)
     bbox_list, info_list = create_bbox_of_zone(dpt_zone)
     parcelles_path = get_parcelles_from_db(dpt_zone)
-
     make_and_run_workflow(parcelles_path, bbox_list)
+
+def main():
+    init_env()
+    create_patches_from_parcelles()
     sat_patch = zone2sat_patch(bucket)
     add_sat_patch_to_eopatch(os.listdir(EOPATCH_FOLDER), sat_patch)
 
