@@ -380,6 +380,7 @@ LABELS = {0: 'Betterave',
             11: 'Protéagineux',
             12: 'Tournesol',
             13: 'Vergers'}
+
 ### EO LEARN ###
 
 DPT = os.environ.get("DPT")

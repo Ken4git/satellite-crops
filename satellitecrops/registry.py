@@ -54,6 +54,7 @@ def save_model(model: keras.Model = None) -> None:
         client = storage.Client()
         bucket = client.bucket(BUCKET_NAME)
         blob = bucket.blob(f"models/{model_filename}")
+        print(list(bucket.list_blobs()))
         blob.upload_from_filename(model_path)
 
         print("✅ Model saved to GCS")
