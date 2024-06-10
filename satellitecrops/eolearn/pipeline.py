@@ -41,8 +41,11 @@ from eolearn.core import (
 from eolearn.io import SentinelHubInputTask, VectorImportTask
 from eolearn.geometry import VectorToRasterTask
 
+MAPPING = pd.read_csv("./mapping_crops.csv")
+
 def init_env():
     print(Fore.MAGENTA + "\n⏳ Init environnement" + Style.RESET_ALL)
+    MAPPING = pd.read_csv("../../mapping_crops.csv")
     for folder in (EOPATCH_FOLDER, EOPATCH_SAMPLES_FOLDER, RESULTS_FOLDER):
         os.makedirs(folder, exist_ok=True)
     print(f"✅ Environnement loaded")
