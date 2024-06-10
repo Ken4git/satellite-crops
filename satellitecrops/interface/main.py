@@ -3,7 +3,7 @@ import tensorflow as tf
 from colorama import Fore, Style
 
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.optimizer import Adam
+#from tensorflow.keras.optimizer import Adam
 
 from satellitecrops.params import *
 from satellitecrops.model.unet import unet, train_model
@@ -18,7 +18,8 @@ def train(
         batch_size:int= 16,
         patience:int= 5,
         alpha:float=0.25,
-        gamma:float=2
+        gamma:float=2,
+        validation_split:float=0.2
     ) -> float:
 
     """
@@ -35,22 +36,24 @@ def train(
     # Create train and test set
     X , y = create_Xy(path)
     y_cat = tf.keras.utils.to_categorical(y)
-    X_scaled = scaling(X, 3)
+    X_scaled = scaling(X, 1)
+    X_scaled = np.moveaxis(X_scaled, 1, 3)
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
 
-    n_classes = len(y)
+    n_classes = len(np.unique(y))
     img_height = y.shape[1]
     img_width = y.shape[2]
-    channels = X.shape[-1] # Attention bien vérifier que c'est la bonne shape une fois X créé
+    channels = X.shape[1]
 
     # Train a model on the training set, using `model.py`
     model = None
 
-    optimizer = Adam(learning_rate=learning_rate)
+    optimizer = tf.keras.optimizer.Adam(learning_rate=learning_rate)
 
     model = unet(n_classes=n_classes,
                  img_height=img_height,
                  img_width=img_width,
+                 img_channels=channels,
                  optimizer=optimizer,
                  alpha=alpha,
                  gamma=gamma)
@@ -61,7 +64,7 @@ def train(
         y_train,
         batch_size=batch_size,
         patience=patience,
-        validation_data=(X_test, y_test)
+        validation_split=validation_split
     )
 
     val_meanIoU = np.max(history.history['val_meanIoU'])
@@ -73,7 +76,7 @@ def train(
     )
 
     # Save results on the hard drive using taxifare.ml_logic.registry
-    save_results(params=params, metrics=dict(mae=val_meanIoU))
+    save_results(params=params, metrics=dict(mean_IoU=val_meanIoU))
 
     # Save model weight on the hard drive (and optionally on GCS too!)
     save_model(model=model)
@@ -88,6 +91,6 @@ def train(
 
 if __name__ == '__main__':
     #preprocess()
-    train()
+    train('/satellite-crops/data/departments/landes/eopatches')
     #evaluate()
     #pred()
