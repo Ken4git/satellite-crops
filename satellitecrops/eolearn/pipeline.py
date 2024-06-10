@@ -45,6 +45,7 @@ def create_patches_from_parcelles():
 
 def main():
     init_env()
+    bucket = BucketConnector()
     create_patches_from_parcelles()
     sat_patch = zone2sat_patch(bucket)
     add_sat_patch_to_eopatch(os.listdir(EOPATCH_FOLDER), sat_patch)
