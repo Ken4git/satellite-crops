@@ -44,11 +44,11 @@ def train(
     print("X_scaled done")
     X_scaled = np.moveaxis(X_scaled, 1, 3)
     print("")
-    test_offset = round(X_scaled.shape[0]*test_size)
+    test_offset = X_scaled.shape[0] - round(X_scaled.shape[0]*test_size)
     X_train = X_scaled[:test_offset]
     y_train = y_cat[:test_offset]
-    X_test = X_scaled[X_scaled.shape[0] - test_offset:]
-    y_test = y_cat[X_scaled.shape[0] - test_offset:]
+    X_test = X_scaled[test_offset:]
+    y_test = y_cat[test_offset:]
     print(f"X_train : {X_train.shape}\ny_train : {y_train.shape}\nX_test : {X_test.shape}\ny_test : {y_test.shape}")
     # X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
 
