@@ -13,9 +13,6 @@ from satellitecrops.registry import load_model
 from satellitecrops.preproc import scaling
 from satellitecrops.params import *
 
-X = np.load('./data/kaggle_dataset/X.npy')
-
-
 app = FastAPI()
 app.state.model = load_model()
 
