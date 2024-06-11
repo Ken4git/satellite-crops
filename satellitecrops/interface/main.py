@@ -36,12 +36,16 @@ def train(
     # Create train and test set
     X , y = create_Xy(path)
     y = clean_y(y)
+    print(f"y cleaned. {y.shape}")
     y_cat = tf.keras.utils.to_categorical(y)
+    print('y_cat created')
     X_scaled = scaling(X, 1)
+    print("X_scaled done")
     X_scaled = np.moveaxis(X_scaled, 1, 3)
     X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
 
     n_classes = len(np.unique(y))
+    print("n_classes :", n_classes)
     img_height = y.shape[1]
     img_width = y.shape[2]
     channels = X.shape[1]
@@ -58,7 +62,7 @@ def train(
                  optimizer='adam',
                  alpha=alpha,
                  gamma=gamma)
-
+    print("model initialized")
     model, history = train_model(
         model,
         X_train,
@@ -85,10 +89,6 @@ def train(
     print("✅ train() done \n")
 
     return val_meanIoU
-
-
-
-
 
 if __name__ == '__main__':
     #preprocess()
