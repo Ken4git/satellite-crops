@@ -45,7 +45,6 @@ MAPPING = pd.read_csv("./mapping_crops.csv")
 
 def init_env():
     print(Fore.MAGENTA + "\n⏳ Init environnement" + Style.RESET_ALL)
-    MAPPING = pd.read_csv("../../mapping_crops.csv")
     for folder in (EOPATCH_FOLDER, EOPATCH_SAMPLES_FOLDER, RESULTS_FOLDER):
         os.makedirs(folder, exist_ok=True)
     print(f"✅ Environnement loaded")
@@ -135,7 +134,7 @@ def make_and_run_workflow(parcelles_path, bbox_list, resolution=10):
     rasterization_task = VectorToRasterTask(
         vector_feature,
         (FeatureType.MASK_TIMELESS, "MASK"),
-        values_column="code_group",
+        values_column="id_group",
         raster_resolution=resolution,
         raster_dtype=np.uint8
     )
