@@ -47,14 +47,17 @@ def get_sat_image(bucket, bands=1):
     print(f"✅ Satellite image loaded")
     return sat_bounds, sat_image
 
-def create_sat_eopatch(sat_bounds, sat_image):
+def create_sat_eopatch(sat_bounds, sat_image, save=False, file_name=None, dir_path=None, bucket=None):
     '''Create one eopatch for the whole sat image'''
     sat_patch = EOPatch(bbox=BBox(bbox=sat_bounds, crs=LOCAL_CRS))
     if sat_image.ndim == 3:
         sat_patch.data_timeless["BANDS"] = sat_image
     else:
         sat_patch.data_timeless['BANDS'] = sat_image[..., np.newaxis]
-    return sat_patch
+    if save:
+        bucket.upload(sat_patch, file_name, dir_path)
+    else:
+        return sat_patch
 
 def retrieve_data_bbox(bucket, begin_of_file_name):
     dir_path = os.path.join(SAT_IMG_FOLDER, DPT_FOLDER, IMG_SOURCE)
@@ -73,9 +76,11 @@ def create_sat_eopatches(bucket, img_loc, year):
     for month_num in range(1, 13):
         sat_monthly_dir_path = os.path.join(SAT_IMG_FOLDER, DPT_FOLDER, IMG_SOURCE, IMG_ORIGIN, img_loc, str(year), str(month_num))
         bands_merged = merge_monthly_sat_bands(bucket, sat_monthly_dir_path)
-        return
         for band_name, band_merged in bands_merged.items():
-            create_sat_eopatch(bounds, band_merged)
+            create_sat_eopatch(bounds, band_merged, save=True,
+                               file_name=f"eopatch_{year}_{month_num}_{band_name}",
+                               dir_path= os.path.join(SAT_IMG_FOLDER, DPT_FOLDER), bucket=bucket)
+        del bands_merged
 #def get_sat_images(bucket, ):
 
 def merge_monthly_sat_bands(bucket, month_dir):
@@ -97,20 +102,20 @@ def merge_monthly_sat_bands(bucket, month_dir):
             with rasterio.open('gs://'+cld_file_path) as cld_src:
             # tranform from shape (1, 5490, 5490) to shape (1, 10980, 10980)
                 cld = np.repeat(np.repeat(np.isin(cld_src.read(), [4, 5, 6, 7]), 2, axis=2), 2, axis=1)
-                for key, band_merged in bands_merged.items():
-                    print(f"processing {shots_list[i]} {key}.tif ...")
-                    band_file_path  = os.path.join(bucket.bucket_name, shots_list[i], key+'.tif')
-                    with rasterio.open('gs://'+band_file_path) as band_src:
-                        band_data = band_src.read()
-                        if key == "B11": # from shape (1, 5490, 5490) to shape (1, 10980, 10980)
-                            band_data = np.repeat(np.repeat(band_data, 2, axis=2), 2, axis=1)
-                        if band_merged.shape != band_data.shape:
-                            band_merged = np.zeros(band_data.shape, dtype=np.uint8)
-                        band_merged[band_merged==0]= (band_data*(np.repeat(cld, band_data.shape[0], axis=0)))[band_merged==0]
-                    bands_merged[key] = band_merged
-                    print(f"bands merged {bands_merged.keys()}")
-                    del band_data
-                    del band_merged
+            for key, band_merged in bands_merged.items():
+                print(f"processing {shots_list[i]} {key}.tif ...")
+                band_file_path  = os.path.join(bucket.bucket_name, shots_list[i], key+'.tif')
+                with rasterio.open('gs://'+band_file_path) as band_src:
+                    band_data = band_src.read()
+                if key == "B11": # from shape (1, 5490, 5490) to shape (1, 10980, 10980)
+                    band_data = np.repeat(np.repeat(band_data, 2, axis=2), 2, axis=1)
+                if band_merged.shape != band_data.shape:
+                    band_merged = np.zeros(band_data.shape, dtype=np.uint8)
+                band_merged[band_merged==0]= (band_data*(np.repeat(cld, band_data.shape[0], axis=0)))[band_merged==0]
+                bands_merged[key] = band_merged
+                print(f"bands merged {bands_merged.keys()}")
+                del band_data
+                del band_merged
         del cld
     return bands_merged
 

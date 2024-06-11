@@ -8,6 +8,11 @@ class BucketConnector:
         self.bucket_name = bucket_name
         self.bucket = self.client.bucket(self.bucket_name)
 
+    def upload(self, content, file_name, dir_path=f"eolearn_data/{ZONE_TYPE}/{DPT}"):
+        blob_path = f"{dir_path}/{file_name}"
+        blob = self.bucket.blob(blob_path)
+        blob.upload_from_string(content)
+
     def list_dir(self, dir_path):
         prefix=dir_path+"/"
         return self.client.list_blobs(self.bucket_name, prefix=prefix)
