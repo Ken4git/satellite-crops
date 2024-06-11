@@ -39,6 +39,11 @@ def train(
     y = clean_y(y)
     print(f"y cleaned. {y.shape}")
     y_cat = tf.keras.utils.to_categorical(y)
+    n_classes = len(np.unique(y))
+    print("n_classes :", n_classes)
+    img_height = y.shape[1]
+    img_width = y.shape[2]
+    channels = X.shape[1]
     del y
     print('y_cat created')
     X_scaled = scaling(X, 1)
@@ -55,12 +60,6 @@ def train(
     del X_scaled
     del y_cat
     print(f"X_train : {X_train.shape}\ny_train : {y_train.shape}\nX_test : {X_test.shape}\ny_test : {y_test.shape}")
-
-    n_classes = len(np.unique(y))
-    print("n_classes :", n_classes)
-    img_height = y.shape[1]
-    img_width = y.shape[2]
-    channels = X.shape[1]
 
     # Train a model on the training set, using `model.py`
     model = None
