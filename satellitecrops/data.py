@@ -24,7 +24,6 @@ def create_Xy(path:str):
     # Unzip
     for i,x_path in enumerate(X_path):
         with gzip.open(x_path) as f:
-            print(i)
             X.append(np.load(f))
             f.close()
 
@@ -33,9 +32,11 @@ def create_Xy(path:str):
             y.append(np.load(f))
             f.close()
 
+
     y = np.stack(y)
     X = np.stack(X)
 
-    print('X and y created ... ')
+    print(f'X created with shape {X.shape}')
+    print(f'y created with shape {y.shape}')
 
     return X , y

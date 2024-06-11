@@ -18,8 +18,8 @@ DB_PASS = os.environ.get("DB_PASS")
 DB_NAME = os.environ.get("DB_NAME")
 DB_INSTANCE = os.environ.get("DB_INSTANCE")
 
-MAPPING = pd.read_csv("./mapping_crops.csv")
-print(MAPPING)
+#MAPPING = pd.read_csv("./mapping_crops.csv")
+#print(MAPPING)
 ### EO LEARN ###
 
 DPT = os.environ.get("DPT")
