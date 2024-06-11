@@ -18,7 +18,6 @@ from colorama import Fore, Style
 
 # from tqdm import tqdm
 
-
 def init_env():
     print(Fore.MAGENTA + "\n⏳ Init environnement" + Style.RESET_ALL)
     for folder in (EOPATCH_FOLDER, EOPATCH_SAMPLES_FOLDER, RESULTS_FOLDER):
@@ -44,7 +43,7 @@ def create_patches_from_parcelles():
     make_and_run_workflow(parcelles_path, bbox_list)
 
 def main():
-    init_env()
+    env_variables.init_env()
     bucket = BucketConnector()
     create_patches_from_parcelles()
     sat_patch = zone2sat_patch(bucket)
@@ -52,7 +51,7 @@ def main():
 
 
 def main_local():
-    init_env()
+    env_variables.init_env()
     print(Fore.MAGENTA + "\n⏳ Loading satellite image of the zone" + Style.RESET_ALL)
     sat_dir_path = os.path.join(DATA_PATH, "sat_images")
     add_data_from_sat_patches_to_eopatches(os.listdir(EOPATCH_FOLDER), sat_dir_path)
