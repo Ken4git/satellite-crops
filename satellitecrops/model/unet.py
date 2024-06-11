@@ -119,7 +119,7 @@ def train_model(model: Model,
         epochs=100,
         batch_size=batch_size,
         callbacks=[es],
-        verbose=1
+        verbose=2
     )
 
     print(f"✅ Model trained on {len(X)} rows with min val meanIoU: {round(np.min(history.history['mean_io_u']), 2)}")
