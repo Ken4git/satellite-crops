@@ -27,12 +27,16 @@ IMG_ORIGIN =os.environ.get("IMG_ORIGIN")
 IMG_LOC=os.environ.get("IMG_LOC")
 YEAR=os.environ.get("YEAR")
 
+# Bands used
+BANDS_USED=['B02','B08', 'B11', 'TCI']
+
 
 ### EO LEARN ###
 EOPATCH_FOLDER=os.environ.get("EOPATCH_FOLDER")
 DPT=os.environ.get("DPT")
 ZONE_TYPE=os.environ.get("ZONE_TYPE")
 LOCAL_CRS=os.environ.get("LOCAL_CRS")
+
 
 
 
