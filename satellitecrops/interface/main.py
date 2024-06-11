@@ -45,12 +45,12 @@ def train(
     X_scaled = np.moveaxis(X_scaled, 1, 3)
     print("")
     test_offset = X_scaled.shape[0] - round(X_scaled.shape[0]*test_size)
-    X_train = X_scaled[:test_offset]
-    y_train = y_cat[:test_offset]
-    X_test = X_scaled[test_offset:]
-    y_test = y_cat[test_offset:]
+    # X_train = X_scaled[:test_offset]
+    # y_train = y_cat[:test_offset]
+    # X_test = X_scaled[test_offset:]
+    # y_test = y_cat[test_offset:]
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
     print(f"X_train : {X_train.shape}\ny_train : {y_train.shape}\nX_test : {X_test.shape}\ny_test : {y_test.shape}")
-    # X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
 
     n_classes = len(np.unique(y))
     print("n_classes :", n_classes)
@@ -80,7 +80,7 @@ def train(
         validation_split=validation_split
     )
 
-    val_meanIoU = np.max(history.history['val_meanIoU'])
+    val_meanIoU = np.max(history.history['val_mean_io_u'])
 
     params = dict(
         context="train",
