@@ -19,7 +19,8 @@ def train(
         patience:int= 5,
         alpha:float=0.25,
         gamma:float=2,
-        validation_split:float=0.2
+        validation_split:float=0.2,
+        test_size:float=0.2
     ) -> float:
 
     """
@@ -36,15 +37,29 @@ def train(
     # Create train and test set
     X , y = create_Xy(path)
     y = clean_y(y)
+    print(f"y cleaned. {y.shape}")
     y_cat = tf.keras.utils.to_categorical(y)
-    X_scaled = scaling(X, 1)
-    X_scaled = np.moveaxis(X_scaled, 1, 3)
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
-
     n_classes = len(np.unique(y))
+    print("n_classes :", n_classes)
     img_height = y.shape[1]
     img_width = y.shape[2]
     channels = X.shape[1]
+    del y
+    print('y_cat created')
+    X_scaled = scaling(X, 1)
+    del X
+    print("X_scaled done")
+    X_scaled = np.moveaxis(X_scaled, 1, 3)
+    print("")
+    # test_offset = X_scaled.shape[0] - round(X_scaled.shape[0]*test_size)
+    # X_train = X_scaled[:test_offset]
+    # y_train = y_cat[:test_offset]
+    # X_test = X_scaled[test_offset:]
+    # y_test = y_cat[test_offset:]
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
+    del X_scaled
+    del y_cat
+    print(f"X_train : {X_train.shape}\ny_train : {y_train.shape}\nX_test : {X_test.shape}\ny_test : {y_test.shape}")
 
     # Train a model on the training set, using `model.py`
     model = None
@@ -58,7 +73,7 @@ def train(
                  optimizer='adam',
                  alpha=alpha,
                  gamma=gamma)
-
+    print("model initialized")
     model, history = train_model(
         model,
         X_train,
@@ -68,7 +83,7 @@ def train(
         validation_split=validation_split
     )
 
-    val_meanIoU = np.max(history.history['val_meanIoU'])
+    val_meanIoU = np.max(history.history['val_mean_io_u'])
 
     params = dict(
         context="train",
@@ -85,10 +100,6 @@ def train(
     print("✅ train() done \n")
 
     return val_meanIoU
-
-
-
-
 
 if __name__ == '__main__':
     #preprocess()
