@@ -1,0 +1,375 @@
+CODE CULTURE,LIBELLÉ,cat_crops,id
+BTH,Blé tendre d’hiver,Blé,1
+BTP,Blé tendre de printemps,Blé,1
+MID,Maïs doux,Maïs,6
+MIE,Maïs ensilage,Maïs,6
+MIS,Maïs,Maïs,6
+ORH,Orge d'hiver,Orge,8
+ORP,Orge de printemps,Orge,8
+AVH,Avoine d’hiver,Céréales (autres),4
+AVP,Avoine de printemps,Céréales (autres),4
+BDH,Blé dur d’hiver,Blé,1
+BDP,Blé dur de printemps,Blé,1
+BDT,"Blé dur de printemps semé tardivement (après
+ le 31/05)",Blé,1
+CAG,Autre céréale d’un autre genre,Céréales (autres),4
+CGF,Autre céréale de genre Fagopyrum,Céréales (autres),4
+CGH,Autre céréale de genre Phalaris,Céréales (autres),4
+CGO,Autre céréale de genre Sorghum,Céréales (autres),4
+CGP,Autre céréale de genre Panicum,Céréales (autres),4
+CGS,Autre céréale de genre Setaria,Céréales (autres),4
+CHA,Autre céréale d’hiver de genre Avena,Céréales (autres),4
+CHH,Autre céréale d’hiver de genre Hordeum,Céréales (autres),4
+CHS,Autre céréale d’hiver de genre Secale,Céréales (autres),4
+CHT,Autre céréale d’hiver de genre Triticum,Céréales (autres),4
+CPA,"Autre céréale de
+ printemps de genre Avena",Céréales (autres),4
+CPH,Autre céréale de printemps de genre Hordeum,Céréales (autres),4
+CPS,Autre céréale de printemps de genre Secale,Céréales (autres),4
+CPT,"Autre céréale de
+ printemps de genre Triticum",Céréales (autres),4
+CPZ,Autre céréale de printemps de genre Zea,Céréales (autres),4
+EPE,Épeautre,Céréales (autres),4
+MCR,Mélange de céréales,Céréales (autres),4
+MLT,Millet,Céréales (autres),4
+SGH,Seigle d’hiver,Céréales (autres),4
+SGP,Seigle de printemps,Céréales (autres),4
+SOG,Sorgho,Céréales (autres),4
+SRS,Sarrasin,Céréales (autres),4
+TTH,Triticale d’hiver,Céréales (autres),4
+TTP,Triticale de printemps,Céréales (autres),4
+CZH,Colza d’hiver,Colza,3
+CZP,Colza de printemps,Colza,3
+TRN,Tournesol,Tournesol,12
+ARA,Arachide,Oléagineux,7
+LIH,Lin non textile d’hiver,Oléagineux,7
+LIP,Lin non textile de printemps,Oléagineux,7
+MOL,Mélange d’oléagineux,Oléagineux,7
+NVE,Navette d’été,Oléagineux,7
+NVH,Navette d’hiver,Oléagineux,7
+OAG,Autre oléagineux d’un autre genre,Oléagineux,7
+OEH,Autre oléagineux d’espèce Helianthus,Oléagineux,7
+OEI,Œillette,Oléagineux,7
+OHN,Autre oléagineux d’hiver d’espèce Brassica napus,Oléagineux,7
+OHR,Autre oléagineux d’hiver d’espèce Brassica rapa,Oléagineux,7
+OPN,Autre oléagineux de printemps d’espèce Brassica napus,Oléagineux,7
+OPR,Autre oléagineux de printemps d’espèce Brassica rapa,Oléagineux,7
+SOJ,Soja,Oléagineux,7
+FEV,Fève,Protéagineux,11
+FVL,Féverole semée avant le 31/05,Protéagineux,11
+FVT,"Féverole semée tardivement (après le
+ 31/05)",Protéagineux,11
+LDH,Lupin doux d’hiver,Protéagineux,11
+LDP,Lupin doux de printemps semé avant le 31/05,Protéagineux,11
+LDT,Lupin doux de printemps semé tardivement (après le 31/05),Protéagineux,11
+MPC,"Mélange de protéagineux (pois et/ou lupin et/ou féverole) prépondérants semés
+ avant le 31/05 et de céréales",Protéagineux,11
+MPP,Mélange de protéagineux (pois et/ou lupin et/ou féverole),Protéagineux,11
+MPT,"Mélange de protéagineux semés tardivement (après le
+ 31/05)",Protéagineux,11
+PAG,Autre protéagineux d’un autre genre,Protéagineux,11
+PHI,Pois d’hiver,Protéagineux,11
+PPR,Pois de printemps semé avant le 31/05,Protéagineux,11
+PPT,Pois de printemps semé tardivement (après le 31/05),Protéagineux,11
+CHV,Chanvre,Chanvre,2
+LIF,Lin fibres,Oléagineux,7
+J5M,Jachère de 5 ans ou moins,Prairie / Jachère,10
+J6P,Jachère de 6 ans ou plus,Prairie / Jachère,10
+J6S,Jachère de 6 ans ou plus déclarée comme Surface d’intérêt écologique,Prairie / Jachère,10
+JNO,Jachère noire,Prairie / Jachère,10
+RIZ,Riz,Céréales (autres),4
+LEC,Lentille cultivée (non fourragère),Protéagineux,11
+PCH,Pois chiche,Protéagineux,11
+BVF,Betterave fourragère,Betterave,0
+CAF,Carotte fourragère,Légumes,5
+CHF,Chou fourrager,Légumes,5
+CPL,"Fourrage composé de céréales et/ou de protéagineux (en proportion < 50%) et/ou de légumineuses
+ fourragères (en proportion < 50%)",Protéagineux,11
+DTY,Dactyle de 5 ans ou moins,Prairie / Jachère,10
+FAG,Autre fourrage annuel d’un autre genre,Prairie / Jachère,10
+FET,Fétuque de 5 ans ou moins,Prairie / Jachère,10
+FF5,"Féverole fourragère
+ implantée pour la récolte 2015",Prairie / Jachère,10
+FF6,Féverole fourragère implantée pour la récolte 2016,Prairie / Jachère,10
+FF7,Féverole fourragère implantée pour la récolte 2017,Prairie / Jachère,10
+FF8,Féverole fourragère implantée pour la récolte 2018,Prairie / Jachère,10
+FFO,Autre féverole fourragère,Prairie / Jachère,10
+FLO,Fléole de 5 ans ou moins,Prairie / Jachère,10
+FSG,Autre plante fourragère sarclée d’un autre genre,Prairie / Jachère,10
+GAI,Gaillet,Prairie / Jachère,10
+GES,Gesse,Protéagineux,11
+GFP,Autre graminée fourragère pure de 5 ans ou moins,Prairie / Jachère,10
+JO5,Jarosse implantée pour la récolte 2015,Prairie / Jachère,10
+JO6,Jarosse implantée pour la récolte 2016,Prairie / Jachère,10
+JO7,Jarosse implantée pour la récolte 2017,Prairie / Jachère,10
+JO8,Jarosse implantée pour la récolte 2018,Prairie / Jachère,10
+JOD,Jarosse déshydratée,Prairie / Jachère,10
+JOS,Autre jarosse,Prairie / Jachère,10
+LEF,Lentille fourragère,Protéagineux,11
+LFH,Autre lupin fourrager d’hiver,Prairie / Jachère,10
+LFP,Autre lupin fourrager de printemps,Prairie / Jachère,10
+LH5,Lupin fourrager d’hiver implanté pour la récolte 2015,Prairie / Jachère,10
+LH6,Lupin fourrager d’hiver implanté pour la récolte 2016,Prairie / Jachère,10
+LH7,Lupin fourrager d’hiver implanté pour la récolte 2017,Prairie / Jachère,10
+LH8,Lupin fourrager d'hiver implanté pour la récolte 2018,Prairie / Jachère,10
+LO7,Lotier implanté pour la récolte 2017,Prairie / Jachère,10
+LO8,Lotier implanté pour la récolte 2018,Prairie / Jachère,10
+LOT,Lotier,Prairie / Jachère,10
+LP5,Lupin fourrager de printemps implanté pour la récolte 2015,Prairie / Jachère,10
+LP6,Lupin fourrager de printemps implanté pour la récolte 2016,Prairie / Jachère,10
+LP7,Lupin fourrager de printemps implanté pour la récolte 2017,Prairie / Jachère,10
+LP8,Lupin fourrager de printemps implanté pour la récolte 2018,Prairie / Jachère,10
+LU5,Luzerne implantée pour la récolte 2015,Prairie / Jachère,10
+LU6,Luzerne implantée pour la récolte 2016,Prairie / Jachère,10
+LU7,Luzerne implantée pour la récolte 2017,Prairie / Jachère,10
+LU8,Luzerne implantée pour la récolte 2018,Prairie / Jachère,10
+LUD,Luzerne déshydratée,Prairie / Jachère,10
+LUZ,Autre luzerne,Prairie / Jachère,10
+MC5,"Mélange de légumineuses fourragères prépondérantes au semis implantées pour la
+ récolte 2015 et de céréales",Protéagineux,11
+MC6,"Mélange de légumineuses fourragères prépondérantes au semis implantées pour la
+ récolte 2016 et de céréales",Protéagineux,11
+MC7,"Mélange de légumineuses fourragères prépondérantes au semis implantées pour la
+ récolte 2017 et de céréales",Protéagineux,11
+MC8,"Mélange de légumineuses fourragères prépondérantes implantées pour la
+ récolte 2018 et de céréales et d’oléagineux",Protéagineux,11
+ME5,Mélilot implanté pour la récolte 2015,Prairie / Jachère,10
+ME6,Mélilot implanté pour la récolte 2016,Prairie / Jachère,10
+ME7,Mélilot implanté pour la récolte 2017,Prairie / Jachère,10
+ME8,Mélilot implanté pour la récolte 2018,Prairie / Jachère,10
+MED,Mélilot déshydraté,Prairie / Jachère,10
+MEL,Autre mélilot,Prairie / Jachère,10
+MH5,"Mélange de légumineuses fourragères prépondérantes au semis implantées pour la récolte 2015 et
+ d’herbacées ou de graminées fourragères",Protéagineux,11
+MH6,"Mélange de légumineuses fourragères prépondérantes au semis implantées pour la récolte 2016 et
+ d’herbacées ou de graminées fourragères",Protéagineux,11
+MH7,"Mélange de légumineuses fourragères prépondérantes au semis implantées pour la récolte 2017 et
+ d’herbacées ou de graminées fourragères",Protéagineux,11
+MI7,Minette implanté pour la récolte 2017,Prairie / Jachère,10
+MI8,Minette implanté pour la récolte 2018,Prairie / Jachère,10
+MIN,Minette,Prairie / Jachère,10
+ML5,"Mélange de légumineuses fourragères implantées
+ pour la récolte 2015 (entre elles)",Protéagineux,11
+ML6,"Mélange de légumineuses fourragères implantées pour la récolte 2016
+ (entre elles)",Protéagineux,11
+ML7,"Mélange de légumineuses fourragères implantées
+ pour la récolte 2017 (entre elles)",Protéagineux,11
+ML8,Mélange de légumineuses fourragères implantées pour la récolte 2018 (entre elles),Protéagineux,11
+MLC,"Mélange de légumineuses fourragères prépondérantes et de
+ céréales et/ou d’oléagineux",Protéagineux,11
+MLD,Mélange de légumineuses déshydratées (entre elles),Protéagineux,11
+MLF,"Mélange de
+ légumineuses fourragères (entre elles)",Protéagineux,11
+MLG,"Mélange de légumineuses prépondérantes au semis et de graminées fourragères de 5 ans ou
+ moins",Protéagineux,11
+MOH,Moha,Prairie / Jachère,10
+NVF,Navet fourrager,Légumes,5
+PAT,Pâturin commun de 5 ans ou moins,Prairie / Jachère,10
+PFH,Autre pois fourrager d’hiver,Prairie / Jachère,10
+PFP,Autre pois fourrager de printemps,Prairie / Jachère,10
+PH5,Pois fourrager d’hiver implanté pour la récolte 2015,Prairie / Jachère,10
+PH6,Pois fourrager d’hiver implanté pour la récolte 2016,Prairie / Jachère,10
+PH7,Pois fourrager d’hiver implanté pour la récolte 2017,Prairie / Jachère,10
+PH8,Pois fourrager d’hiver implanté pour la récolte 2018,Prairie / Jachère,10
+PP5,Pois fourrager de printemps implanté pour la récolte 2015,Prairie / Jachère,10
+PP6,Pois fourrager de printemps implanté pour la récolte 2016,Prairie / Jachère,10
+PP7,Pois fourrager de printemps implanté pour la récolte 2017,Prairie / Jachère,10
+PP8,Pois fourrager de printemps implanté pour la récolte 2018,Prairie / Jachère,10
+RDF,Radis fourrager,Légumes,5
+SA5,Sainfoin implanté pour la récolte 2015,Prairie / Jachère,10
+SA6,Sainfoin implanté pour la récolte 2016,Prairie / Jachère,10
+SA7,Sainfoin implanté pour la récolte 2017,Prairie / Jachère,10
+SA8,Sainfoin implanté pour la récolte 2018,Prairie / Jachère,10
+SAD,Sainfoin déshydraté,Prairie / Jachère,10
+SAI,Autre sainfoin,Prairie / Jachère,10
+SE5,Serradelle implantée pour la récolte 2015,Prairie / Jachère,10
+SE6,Serradelle implantée pour la récolte 2016,Prairie / Jachère,10
+SE7,Serradelle implantée pour la récolte 2017,Prairie / Jachère,10
+SE8,Serradelle implantée pour la récolte 2018,Prairie / Jachère,10
+SED,Serradelle déshydratée,Prairie / Jachère,10
+SER,Autre serradelle,Prairie / Jachère,10
+TR5,Trèfle implanté pour la récolte 2015,Prairie / Jachère,10
+TR6,Trèfle implanté pour la récolte 2016,Prairie / Jachère,10
+TR7,Trèfle implanté pour la récolte 2017,Prairie / Jachère,10
+TR8,Trèfle implanté pour la récolte 2018,Prairie / Jachère,10
+TRD,Trèfle déshydraté,Prairie / Jachère,10
+TRE,Autre trèfle,Prairie / Jachère,10
+VE5,Vesce implantée pour la récolte 2015,Prairie / Jachère,10
+VE6,Vesce implantée pour la récolte 2016,Prairie / Jachère,10
+VE7,Vesce implantée pour la récolte 2017,Prairie / Jachère,10
+VE8,Vesce implantée pour la récolte 2018,Prairie / Jachère,10
+VED,Vesce déshydratée,Prairie / Jachère,10
+VES,Autre vesce,Prairie / Jachère,10
+XFE,X-Felium de 5 ans ou moins,Prairie / Jachère,10
+BOP,Bois pâturé,Prairie / Jachère,10
+SPH,Surface pastorale - herbe prédominante et ressources fourragères ligneuses présentes,Prairie / Jachère,10
+SPL,Surface pastorale - ressources fourragères ligneuses prédominantes,Prairie / Jachère,10
+PPH,"Prairie permanente - herbe prédominante (ressources fourragères
+ ligneuses absentes ou peu présentes)",Prairie / Jachère,10
+PRL,Prairie en rotation longue (6 ans ou plus),Prairie / Jachère,10
+PTR,Autre prairie temporaire de 5 ans ou moins,Prairie / Jachère,10
+RGA,Ray-grass de 5 ans ou moins,Prairie / Jachère,10
+AGR,Agrume,Vergers,13
+ANA,Ananas,Vergers,13
+AVO,Avocat,Vergers,13
+BCA,Banane créole (fruit et légume) - autre,Vergers,13
+BCF,Banane créole (fruit et légume) - fermage,Vergers,13
+BCI,Banane créole (fruit et légume) - indivision,Vergers,13
+BCP,Banane créole (fruit et légume) - propriété ou faire valoir direct,Vergers,13
+BCR,Banane créole (fruit et légume) - réforme foncière,Vergers,13
+BEA,Banane export - autre,Vergers,13
+BEF,Banane export - fermage,Vergers,13
+BEI,Banane export - indivision,Vergers,13
+BEP,Banane export - propriété ou faire valoir direct,Vergers,13
+BER,Banane export - réforme foncière,Vergers,13
+CAC,Café / Cacao,Vergers,13
+CBT,Cerise bigarreau pour transformation,Vergers,13
+PFR,Petit fruit rouge,Vergers,13
+PRU,Prune d’Ente pour transformation,Vergers,13
+PVT,Pêche Pavie pour transformation,Vergers,13
+PWT,Poire Williams pour transformation,Vergers,13
+VGD,Verger (DROM),Vergers,13
+VRG,Verger,Vergers,13
+RVI,Restructuration du vignoble,Vergers,13
+VRC,Vigne : raisins de cuve,Vergers,13
+VRN,Vigne : raisins de cuve non en production,Vergers,13
+VRT,Vigne : raisins de table,Vergers,13
+CAB,Caroube,Protéagineux,11
+CTG,Châtaigne,Protéagineux,11
+NOS,Noisette,Protéagineux,11
+NOX,Noix,Protéagineux,11
+PIS,Pistache,Protéagineux,11
+OLI,Oliveraie,Vergers,13
+ANE,Aneth,Légumes,5
+ANG,Angélique,Légumes,5
+ANI,Anis,Légumes,5
+BAR,Bardane,Légumes,5
+BAS,Basilic,Légumes,5
+BRH,Bourrache de 5 ans ou moins,Légumes,5
+BTN,"Betterave non fourragère
+ / Bette",Betterave,0
+CAV,Carvi,Légumes,5
+CHR,Chardon Marie,Légumes,5
+CIB,Ciboulette,Légumes,5
+CML,Cameline,Légumes,5
+CMM,Camomille,Légumes,5
+CRD,Coriandre,Légumes,5
+CRF,Cerfeuil,Légumes,5
+CUM,Cumin,Légumes,5
+CUR,Curcuma,Légumes,5
+EST,Estragon,Légumes,5
+FNO,Fenouil,Légumes,5
+FNU,Fenugrec,Légumes,5
+HBL,Houblon,Légumes,5
+LAV,Lavande / Lavandin,Légumes,5
+MAV,Mauve,Légumes,5
+MLI,Mélisse,Légumes,5
+MLP,Millepertuis,Légumes,5
+MOT,Moutarde,Légumes,5
+MRJ,Marjolaine / Origan,Légumes,5
+MTH,Menthe,Légumes,5
+ORT,Ortie,Légumes,5
+OSE,Oseille,Légumes,5
+PAR,Plante aromatique (autre que vanille),Légumes,5
+PMD,Plante médicinale,Légumes,5
+PPA,"Autre plante à parfum, aromatique et médicinale annuelle",Légumes,5
+PPF,Plante à parfum (autre que géranium et vétiver),Légumes,5
+PPP,"Autre plante à parfum, aromatique et médicinale pérenne",Légumes,5
+PSL,Persil,Légumes,5
+PSN,Psyllium noir de Provence,Légumes,5
+PSY,Plantain psyllium,Légumes,5
+ROM,Romarin,Légumes,5
+SGE,Sauge,Légumes,5
+SRI,Sarriette,Légumes,5
+TAB,Tabac,Légumes,5
+THY,Thym,Légumes,5
+TOT,Tomate pour transformation,Légumes,5
+VAL,Valériane,Légumes,5
+VNB,Vanille sous bois,Légumes,5
+VNL,Vanille,Légumes,5
+VNV,Vanille verte,Légumes,5
+YLA,Ylang-ylang,Légumes,5
+AIL,Ail,Légumes,5
+ART,Artichaut,Légumes,5
+AUB,Aubergine,Légumes,5
+BLT,Bleuet,Légumes,5
+BUR,Bugle rampante,Légumes,5
+CAR,Carotte,Légumes,5
+CCN,Concombre / Cornichon,Légumes,5
+CCT,Courgette / Citrouille,Légumes,5
+CEL,Céleri,Légumes,5
+CES,Chicorée / Endive / Scarole,Légumes,5
+CHU,Chou,Légumes,5
+CMB,Courge musquée / Butternut,Légumes,5
+CRA,Cresson alénois de 5 ans ou moins,Légumes,5
+CRN,Cornille,Légumes,5
+CRS,Cresson,Légumes,5
+CSS,Culture sous serre hors sol,Légumes,5
+DOL,Dolique,Légumes,5
+EPI,Épinard,Légumes,5
+FLA,Autre légume ou fruit annuel,Légumes,5
+FLP,Autre légume ou fruit pérenne,Légumes,5
+FRA,Fraise,Légumes,5
+GER,Géranium,Légumes,5
+HAR,Haricot / Flageolet,Légumes,5
+HPC,Horticulture ornementale de plein champ,Légumes,5
+HSA,Horticulture ornementale sous abri,Légumes,5
+LBF,Laitue / Batavia / Feuille de chêne,Légumes,5
+LSA,Légume sous abri,Légumes,5
+MAC,Mâche,Légumes,5
+MLO,Melon,Légumes,5
+MRG,Marguerite,Légumes,5
+NVT,Navet,Légumes,5
+OIG,Oignon / Échalote,Légumes,5
+PAN,Panais,Légumes,5
+PAQ,Pâquerette,Légumes,5
+PAS,Pastèque,Légumes,5
+PMV,Primevère,Légumes,5
+POR,Poireau,Légumes,5
+POT,Potiron / Potimarron,Légumes,5
+PPO,Petits pois,Légumes,5
+PSE,Pensée,Légumes,5
+PTC,Pomme de terre de consommation,Pomme de terre,9
+PTF,Pomme de terre féculière,Pomme de terre,9
+PVP,Poivron / Piment,Légumes,5
+RDI,Radis,Légumes,5
+ROQ,Roquette,Légumes,5
+RUT,Rutabaga,Légumes,5
+SFI,Salsifis,Légumes,5
+TOM,Tomate,Légumes,5
+TOP,Topinambour,Légumes,5
+VER,Véronique,Légumes,5
+CSA,Canne à sucre - autre,Céréales (autres),4
+CSF,Canne à sucre - fermage,Céréales (autres),4
+CSI,Canne à sucre - indivision,Céréales (autres),4
+CSP,Canne à sucre - propriété ou faire valoir direct,Céréales (autres),4
+CSR,Canne à sucre - réforme foncière,Céréales (autres),4
+ACA,Autre culture non précisée dans la liste (admissible),Prairie / Jachère,10
+BFP,"Bande admissible le long
+ d’une forêt avec production",Prairie / Jachère,10
+BFS,Bande admissible le long d’une forêt sans production,Prairie / Jachère,10
+BOR,Bordure de champ,Prairie / Jachère,10
+BRO,Brome de 5 ans ou moins,Prairie / Jachère,10
+BTA,Bande tampon,Prairie / Jachère,10
+CAE,"Châtaigneraie entretenue par des porcins ou des petits
+ ruminants",Prairie / Jachère,10
+CEE,Chênaie entretenue par des porcins ou des petits ruminants,Prairie / Jachère,10
+CID,"Cultures conduites en interrangs : 2 cultures
+ représentant chacune plus de 25%",Prairie / Jachère,10
+CIT,Cultures conduites en interrangs : 3 cultures représentant chacune plus de 25%,Prairie / Jachère,10
+CUA,Culture sous abattis,Prairie / Jachère,10
+MCT,Miscanthus,Prairie / Jachère,10
+MPA,Autre mélange de plantes fixant l’azote,Prairie / Jachère,10
+MRS,Marais salant,Prairie / Jachère,10
+NYG,Nyger,Prairie / Jachère,10
+PCL,Phacélie de 5 ans ou moins,Prairie / Jachère,10
+PEP,Pépinière,Prairie / Jachère,10
+ROS,Roselière,Prairie / Jachère,10
+SBO,Surface boisée sur une ancienne terre agricole,Prairie / Jachère,10
+SNA,Surface non agricole non visible sur l’orthophotographie,Prairie / Jachère,10
+SNE,Surface agricole temporairement non exploitée,Prairie / Jachère,10
+TBT,Tubercule tropical,Prairie / Jachère,10
+TCR,Taillis à courte rotation,Prairie / Jachère,10
+TRU,Truffière (chênaie de plants mycorhizés),Prairie / Jachère,10
+VET,Vétiver,Prairie / Jachère,10
+ZZZ,Culture inconnue,Prairie / Jachère,10

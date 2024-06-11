@@ -46,6 +46,7 @@ class SQLConnection:
         ).fetchall()
 
 
+
     def get_parcelles_in_bbox(self: object, geometry: GeoSeries, crs: str) -> list:
         """Get the parcelles contained in the bounding box passed as
         bbox argument. Converts the polygon to the givien crs

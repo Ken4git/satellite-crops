@@ -24,7 +24,7 @@ from rasterio.plot import show
 from rasterio.merge import merge
 
 ### eolearn tools
-from enrich_eopatches import add_sat_patch_to_eopatch
+# from satellitecrops.eolearn.enrich_eopatches import add_sat_patch_to_eopatch
 
 ### EO-Learn / SentinelHub ###
 from sentinelhub import BBox, CRS, BBoxSplitter, TileSplitter
@@ -41,8 +41,11 @@ from eolearn.core import (
 from eolearn.io import SentinelHubInputTask, VectorImportTask
 from eolearn.geometry import VectorToRasterTask
 
+MAPPING = pd.read_csv("./mapping_crops.csv")
+
 def init_env():
     print(Fore.MAGENTA + "\n⏳ Init environnement" + Style.RESET_ALL)
+    MAPPING = pd.read_csv("../../mapping_crops.csv")
     for folder in (EOPATCH_FOLDER, EOPATCH_SAMPLES_FOLDER, RESULTS_FOLDER):
         os.makedirs(folder, exist_ok=True)
     print(f"✅ Environnement loaded")
@@ -114,7 +117,11 @@ def get_parcelles_from_db(zone):
     if not os.path.isfile(parcelles_path):
         conn = SQLConnection()
         parcelles_df = conn.get_parcelles_in_bbox(zone.geometry, 2154)
-        parcelles_df["code_group"] = parcelles_df.code_group.astype("int64")
+        # parcelles_df["code_group"] = parcelles_df.code_group.astype("int64")
+        parcelles_df["id_group"] = [0] * len(parcelles_df)
+        print(MAPPING)
+        for code in MAPPING["CODE CULTURE"]:
+            parcelles_df.loc[parcelles_df["code_cultu"] == code, 'id_group'] = MAPPING[MAPPING["CODE CULTURE"] == code].id.iloc[0]
         parcelles_df.to_file(parcelles_path)
     print(f"✅ Parcelles loaded locally")
     return parcelles_path
@@ -156,6 +163,38 @@ def make_and_run_workflow(parcelles_path, bbox_list, resolution=10):
     executor.make_report()
     print(f"✅ Workflow Done !")
 
+def add_data2subpatch(sat_patch, eopatch):
+    # Find the pixel indices corresponding to the small_bbox
+    height, width = sat_patch.data_timeless['BANDS'].shape[-2:]
+
+    min_x, min_y = eopatch.bbox.lower_left
+    max_x, max_y = eopatch.bbox.upper_right
+    patch_min_x, patch_min_y = sat_patch.bbox.lower_left
+    patch_max_x, patch_max_y = sat_patch.bbox.upper_right
+    # compute coord of each pixel of sat_patch
+    x_pxl_coord = np.linspace(patch_min_x, patch_max_x, width)
+    y_pxl_coord = np.linspace(patch_min_y, patch_max_y, height)
+    x_min_idx = np.searchsorted(x_pxl_coord, min_x)
+    x_max_idx = np.searchsorted(x_pxl_coord, max_x)
+    y_min_idx = np.searchsorted(y_pxl_coord, min_y)
+    y_max_idx = np.searchsorted(y_pxl_coord, max_y)
+    # Copy data features
+    new_eopatch = EOPatch(bbox=BBox(bbox=(min_x, min_y, max_x, max_y), crs=LOCAL_CRS))
+
+    for feature_type, feature_name in sat_patch.get_features():
+        if feature_type.is_spatial():
+            new_eopatch[feature_type][feature_name] = sat_patch[feature_type][feature_name][:,height-y_max_idx:height-y_min_idx, x_min_idx:x_max_idx]
+    return new_eopatch
+
+def add_sat_patch_to_eopatch(eopatches_files, sat_patch):
+    for eo_file in eopatches_files:
+        eo_file_path = os.path.join(EOPATCH_FOLDER, eo_file)
+        eopatch = EOPatch.load(eo_file_path, lazy_loading=True)
+        new_eopatch = add_data2subpatch(sat_patch, eopatch)
+        new_eopatch.save(eo_file_path, overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
+        del eopatch
+        del new_eopatch
+
 
 def main():
     init_env()
@@ -166,13 +205,14 @@ def main():
 
     bbox_list, info_list = create_bbox_of_zone(dpt_zone)
 
+    parcelles_path = get_parcelles_from_db(dpt_zone)
+
     sat_bounds, sat_image = get_sat_image(bucket, 3)
 
     sat_patch = create_sat_eopatch(sat_bounds, sat_image)
 
     # bbox_gdf = create_bbox_gdf(bbox_list, info_list)
 
-    parcelles_path = get_parcelles_from_db(dpt_zone)
 
     make_and_run_workflow(parcelles_path, bbox_list)
 
