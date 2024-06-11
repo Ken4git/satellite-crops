@@ -19,7 +19,8 @@ def train(
         patience:int= 5,
         alpha:float=0.25,
         gamma:float=2,
-        validation_split:float=0.2
+        validation_split:float=0.2,
+        test_size:float=0.2
     ) -> float:
 
     """
@@ -42,7 +43,14 @@ def train(
     X_scaled = scaling(X, 1)
     print("X_scaled done")
     X_scaled = np.moveaxis(X_scaled, 1, 3)
-    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
+    print("")
+    test_offset = round(X_scaled.shape[0]*test_size)
+    X_train = X_scaled[:test_offset]
+    y_train = y_cat[:test_offset]
+    X_test = X_scaled[X_scaled.shape[0] - test_offset:]
+    y_test = y_cat[X_scaled.shape[0] - test_offset:]
+    print(f"X_train : {X_train.shape}\ny_train : {y_train.shape}\nX_test : {X_test.shape}\ny_test : {y_test.shape}")
+    # X_train, X_test, y_train, y_test = train_test_split(X_scaled, y_cat, test_size=0.2)
 
     n_classes = len(np.unique(y))
     print("n_classes :", n_classes)
