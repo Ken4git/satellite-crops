@@ -23,6 +23,7 @@ DB_INSTANCE = os.environ.get("DB_INSTANCE")
 # Satellite Data
 SAT_IMG_FOLDER =os.environ.get("SAT_IMG_FOLDER")
 DPT_FOLDER=os.environ.get("DPT_FOLDER")
+IMG_SOURCE = os.environ.get("IMG_SOURCE")
 IMG_ORIGIN =os.environ.get("IMG_ORIGIN")
 IMG_LOC=os.environ.get("IMG_LOC")
 YEAR=os.environ.get("YEAR")
@@ -36,8 +37,6 @@ EOPATCH_FOLDER=os.environ.get("EOPATCH_FOLDER")
 DPT=os.environ.get("DPT")
 ZONE_TYPE=os.environ.get("ZONE_TYPE")
 LOCAL_CRS=os.environ.get("LOCAL_CRS")
-
-
 
 
 MAPPING = {'Blé tendre d’hiver': 'Blé ',

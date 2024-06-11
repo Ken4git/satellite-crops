@@ -49,6 +49,11 @@ def main():
     sat_patch = zone2sat_patch(bucket)
     add_sat_patch_to_eopatch(os.listdir(EOPATCH_FOLDER), sat_patch)
 
+from satellitecrops.eolearn.create_eopatches import create_sat_eopatches
+def create_patches():
+    init_env()
+    bucket = BucketConnector()
+    print(create_sat_eopatches(bucket, "30/T/XP", 2019))
 
 def main_local():
     init_env()
@@ -57,4 +62,4 @@ def main_local():
     add_data_from_sat_patches_to_eopatches(os.listdir(EOPATCH_FOLDER), sat_dir_path)
 
 if __name__ == "__main__":
-    main()
+    create_patches()

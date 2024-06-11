@@ -5,10 +5,13 @@ from eolearn.core import (
     )
 
 import geojson
+import json
 import rasterio
 import os
 import numpy as np
-from params import *
+from satellitecrops.params import *
+import gcsfs
+import rasterio
 
 from colorama import Fore, Style
 
@@ -53,55 +56,61 @@ def create_sat_eopatch(sat_bounds, sat_image):
         sat_patch.data_timeless['BANDS'] = sat_image[..., np.newaxis]
     return sat_patch
 
-def create_sat_eopatches(bucket):
-    sat_dir_path = os.path.join(DATA_DIR_LOCAL, SAT_IMG_FOLDER, DPT_FOLDER, IMG_ORIGIN, IMG_LOC, YEAR, "1")
-    shots_list = os.listdir(sat_dir_path)
-    num_shots = len(shots_list)
-    img_clean = np.zeros((1))
-    for i in range(num_shots):
-        img_path = os.path.join(sat_dir_path, shots_list[i], 'TCI.tif')
-        cld_path = os.path.join(sat_dir_path, shots_list[i], 'SCL.tif')
-        if os.path.isfile(img_path) & os.path.isfile(cld_path):
-            with rasterio.open(img_path) as img_file:
-                with rasterio.open(cld_path) as cld_file:
-                    img = img_file.read()
-                    print(img.shape, img.strides)
-                    if img_clean.shape != img.shape:
-                        img_clean = np.zeros(img.shape, dtype=np.uint8)
-                    cld = np.repeat(np.repeat(np.isin(cld_file.read(), [4, 5, 6, 7]), 2, axis=2), 2, axis=1)
-                    img_clean[img_clean==0]= (img*(np.repeat(cld, img.shape[0], axis=0)))[img_clean==0]
-                    print(img_clean.shape, img_clean.strides)
-    del img
-    del cld
+def retrieve_data_bbox(bucket, begin_of_file_name):
+    dir_path = os.path.join(SAT_IMG_FOLDER, DPT_FOLDER, IMG_SOURCE)
+    sat_data_properties_file_name = "sat_data_properties.json"
+    sat_data_properties_str = bucket.get_blob(sat_data_properties_file_name, dir_path)
+    sat_data_properties = json.loads(sat_data_properties_str)
+    for key in sat_data_properties.keys():
+        if key.startswith(begin_of_file_name):
+            return sat_data_properties[key]['bbox']
+
+def create_sat_eopatches(bucket, img_loc, year):
+    '''IMG_LOC=30/T/XP
+        YEAR=2019'''
+    begin_of_file_name="S2B_"+img_loc.replace("/", "")+"_"+str(year)
+    bounds=retrieve_data_bbox(bucket, begin_of_file_name)
+    for month_num in range(1, 13):
+        sat_monthly_dir_path = os.path.join(SAT_IMG_FOLDER, DPT_FOLDER, IMG_SOURCE, IMG_ORIGIN, img_loc, str(year), str(month_num))
+        bands_merged = merge_monthly_sat_bands(bucket, sat_monthly_dir_path)
+        return
+        for band_name, band_merged in bands_merged.items():
+            create_sat_eopatch(bounds, band_merged)
 #def get_sat_images(bucket, ):
 
-def merge_monthly_sat_bands(month_dir):
+def merge_monthly_sat_bands(bucket, month_dir):
     '''Merge all shots of a month for each band
     Shots are filtered by maskcloud (scl: scene classification) and merged
     Parameters:
     month_dir: path to the directory of given month
     Return:
     dict of bands, key are band names and values are merge data'''
-    shots_list = os.listdir(month_dir)
+    shots_list=list(bucket.list_dir(month_dir))
+    shots_list = list(set([os.path.dirname(blob.name) for blob in shots_list]))
     num_shots = len(shots_list)
     bands_merged = {band: np.zeros((1))for band in BANDS_USED}
     for i in range(num_shots):
-        cld_path = os.path.join(month_dir, shots_list[i], 'SCL.tif')
-        # tranform from shape (1, 5490, 5490) to shape (1, 10980, 10980)
-        cld = np.repeat(np.repeat(np.isin(cld_file.read(), [4, 5, 6, 7]), 2, axis=2), 2, axis=1)
-        with rasterio.open(cld_path) as cld_file:
-            for key, band_merged in bands_merged.items():
-                band_path = os.path.join(month_dir, shots_list[i], key+'.tif')
-                with rasterio.open(band_path) as band_file:
-                    band_data = band_file.read()
-                    if key == "B11": # from shape (1, 5490, 5490) to shape (1, 10980, 10980)
-                        band_data = np.repeat(np.repeat(band_data, 2, axis=2), 2, axis=1)
-                    if band_merged.shape != band_data.shape:
-                        band_merged = np.zeros(band_data.shape, dtype=np.uint8)
-                    band_merged[band_merged==0]= (band_data*(np.repeat(cld, band_data.shape[0], axis=0)))[band_merged==0]
-                bands_merged[key] = band_merged
-                del band_data
-                del band_merged
+        print(f"processing shot {i}")
+        # Open the file using rasterio
+        with rasterio.Env(GCS=True):
+            cld_file_path  = os.path.join(bucket.bucket_name, shots_list[i], 'SCL.tif')
+            with rasterio.open('gs://'+cld_file_path) as cld_src:
+            # tranform from shape (1, 5490, 5490) to shape (1, 10980, 10980)
+                cld = np.repeat(np.repeat(np.isin(cld_src.read(), [4, 5, 6, 7]), 2, axis=2), 2, axis=1)
+                for key, band_merged in bands_merged.items():
+                    print(f"processing {shots_list[i]} {key}.tif ...")
+                    band_file_path  = os.path.join(bucket.bucket_name, shots_list[i], key+'.tif')
+                    with rasterio.open('gs://'+band_file_path) as band_src:
+                        band_data = band_src.read()
+                        if key == "B11": # from shape (1, 5490, 5490) to shape (1, 10980, 10980)
+                            band_data = np.repeat(np.repeat(band_data, 2, axis=2), 2, axis=1)
+                        if band_merged.shape != band_data.shape:
+                            band_merged = np.zeros(band_data.shape, dtype=np.uint8)
+                        band_merged[band_merged==0]= (band_data*(np.repeat(cld, band_data.shape[0], axis=0)))[band_merged==0]
+                    bands_merged[key] = band_merged
+                    print(f"bands merged {bands_merged.keys()}")
+                    del band_data
+                    del band_merged
         del cld
     return bands_merged
 
