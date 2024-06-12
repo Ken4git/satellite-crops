@@ -53,7 +53,10 @@ from satellitecrops.eolearn.create_eopatches import create_sat_eopatches
 def create_patches():
     init_env()
     bucket = BucketConnector()
-    print(create_sat_eopatches(bucket, "30/T/XP", 2019))
+    create_sat_eopatches(bucket, "30/T/XP", 2019)
+    create_sat_eopatches(bucket, "30/T/XQ", 2019)
+    create_sat_eopatches(bucket, "30/T/YP", 2019)
+    create_sat_eopatches(bucket, "30/T/YQ", 2019)
 
 def main_local():
     init_env()

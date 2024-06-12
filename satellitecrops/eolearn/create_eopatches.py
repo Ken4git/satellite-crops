@@ -76,7 +76,7 @@ def create_sat_eopatches(bucket, img_loc, year):
         bands_merged = merge_monthly_sat_bands(bucket, sat_monthly_dir_path)
         for band_name, band_merged in bands_merged.items():
             create_sat_eopatch(bounds, band_merged, save=True,
-                               file_name=f"eopatch_{year}_{month_num}_{band_name}",
+                               file_name=f"eopatch_{year}_{month_num}_{img_loc.replace("/", "")}_{band_name}",
                                dir_path= os.path.join(SAT_IMG_FOLDER, DPT_FOLDER), bucket=bucket)
         del bands_merged
 #def get_sat_images(bucket, ):
