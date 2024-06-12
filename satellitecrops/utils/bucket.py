@@ -15,7 +15,8 @@ class BucketConnector:
         eopatch.save("~/tmp/eopatch", overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
         blob_path = f"{dir_path}/{file_name}"
         blob = self.bucket.blob(blob_path)
-        blob.upload_from_file("~/tmp/eopatch")
+        with open("~/tmp/eopatch", 'rb') as file:
+            blob.upload_from_file(file)
 
     def list_dir(self, dir_path):
         prefix=dir_path+"/"
