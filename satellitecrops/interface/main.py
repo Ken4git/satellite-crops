@@ -117,7 +117,7 @@ def grid_search():
     histories = []
 
     learning_rates = [0.0001, 0.005, 0.001, 0.1, 1, 10]
-    batch_sizes = [4, 8, 16, 32]
+    batch_sizes = [16, 32]
     patience = [5, 10]
     for params in itertools.product(learning_rates, batch_sizes, patience):
         print(f"--->New run with params {params[0]}, {params[1]}, {params[2]}")
