@@ -23,7 +23,7 @@ google-cloud-vision==3.7.2
 geopandas==0.14.4
 
 gcsfs
-
+pathlib
 # geodata manipulation
 eo-learn
 eo-learn[EXTRA]
