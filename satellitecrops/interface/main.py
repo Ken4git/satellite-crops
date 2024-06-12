@@ -92,7 +92,7 @@ def train(
     )
 
     # Save results on the hard drive using taxifare.ml_logic.registry
-    save_results(params=params, metrics=dict(mean_IoU=val_meanIoU))
+    save_results(params=params, metrics=dict(mean_IoU=val_meanIoU, history=history))
 
     # Save model weight on the hard drive (and optionally on GCS too!)
     save_model(model=model)
