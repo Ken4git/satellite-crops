@@ -3,6 +3,7 @@ import numpy as np
 import geopandas as gpd
 import pandas as pd
 import gzip
+from satellitecrops.params import *
 
 
 def create_npy_file():
@@ -10,7 +11,7 @@ def create_npy_file():
     bands = []
     masks = []
 
-    files = os.listdir(".")
+    files = os.listdir(os.path.join(DATA_PATH, "eopatches"))
 
     for i in range(len(files) - 1):
         eo_path = f"./eopatch_{i}/bbox.geojson"
@@ -28,9 +29,9 @@ def create_npy_file():
     masks_df = np.stack(masks, axis=0)
     eo_loc_df = pd.concat(eo_loc, ignore_index=True, axis=0)
 
-    eo_loc_df.to_file("../data/dataframe.gpkg", driver="GPKG", layer="name")
-    np.save("../data/my_images", bands_df)
-    np.save("../data/my_labels", masks_df)
+    eo_loc_df.to_file("./data/dataframe.gpkg", driver="GPKG", layer="name")
+    np.save("./data/my_images", bands_df)
+    np.save("./data/my_labels", masks_df)
 
 
 if __name__ == "__main__":
