@@ -33,8 +33,8 @@ def predict(eopatch_id:int):
     """
 
     # Retrieve eopatch directly from the bucket
+    # url = 'https://storage.cloud.google.com/satellite_crops/eolearn_data/dpt/landes/my_images.npy'
     client = storage.Client()
-    url = 'https://storage.cloud.google.com/satellite_crops/eolearn_data/dpt/landes/my_images.npy'
 
     blobs = client.bucket('satellite_crops').blob(f'eolearn_data/dpt/landes/BANDS_{eopatch_id}.npy.gz')
 

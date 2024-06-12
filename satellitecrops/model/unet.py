@@ -2,6 +2,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, concatenate, Conv2DTranspose, BatchNormalization, Dropout, Lambda
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.optimizers import Adam
 from keras import Model
 
 from typing import Tuple
@@ -16,7 +17,8 @@ def unet(n_classes:int,
          img_channels:int,
          optimizer='adam',
          alpha:float=0.25,
-         gamma:float=2.0
+         gamma:float=2.0,
+         learning_rate:float=0.001
          ):
     '''
     Initialize and compile a Unet model. Source of model architecture (https://youtu.be/csFGTLT6_WQ).
@@ -85,7 +87,7 @@ def unet(n_classes:int,
     outputs = Conv2D(n_classes, 1, activation='softmax', padding='same')(c9)
 
     model = Model(inputs=[s], outputs=[outputs])
-    model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalFocalCrossentropy(alpha=alpha,gamma=gamma), metrics=metrics(n_classes))
+    model.compile(optimizer=Adam(learning_rate=learning_rate), loss=tf.keras.losses.CategoricalFocalCrossentropy(alpha=alpha,gamma=gamma), metrics=metrics(n_classes))
     model.summary()
 
     return model

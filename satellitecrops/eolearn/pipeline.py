@@ -118,7 +118,7 @@ def get_parcelles_from_db(zone):
         parcelles_df = conn.get_parcelles_in_bbox(zone.geometry, 2154)
         # parcelles_df["code_group"] = parcelles_df.code_group.astype("int64")
         parcelles_df["id_group"] = [0] * len(parcelles_df)
-        print(MAPPING)
+        # print(MAPPING)
         for code in MAPPING["CODE CULTURE"]:
             parcelles_df.loc[parcelles_df["code_cultu"] == code, 'id_group'] = MAPPING[MAPPING["CODE CULTURE"] == code].id.iloc[0]
         parcelles_df.to_file(parcelles_path)
