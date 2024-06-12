@@ -23,7 +23,7 @@ class BucketConnector:
         blob_name_prefix = os.path.join(dir_path, file_name)
         results = transfer_manager.upload_many_from_filenames(self.bucket, string_paths, source_directory=eopatch_folder, blob_name_prefix=blob_name_prefix)
         print(results)
-=file_name
+
     def list_dir(self, dir_path):
         prefix=dir_path+"/"
         return self.client.list_blobs(self.bucket_name, prefix=prefix)
