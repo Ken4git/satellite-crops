@@ -37,11 +37,10 @@ def get_img_coordinates(path):
 def create_patches_from_parcelles():
     init_env()
     bucket = BucketConnector()
-    bucket.upload_sat_patch("test", "test_dir")
-    # dpt_zone = get_zone_to_patch(bucket).to_crs(LOCAL_CRS)
-    # bbox_list, info_list = create_bbox_of_zone(dpt_zone)
-    # parcelles_path = get_parcelles_from_db(dpt_zone)
-    # make_and_run_workflow(parcelles_path, bbox_list)
+    dpt_zone = get_zone_to_patch(bucket).to_crs(LOCAL_CRS)
+    bbox_list, info_list = create_bbox_of_zone(dpt_zone)
+    parcelles_path = get_parcelles_from_db(dpt_zone)
+    make_and_run_workflow(parcelles_path, bbox_list)
 
 def main():
     init_env()
@@ -54,7 +53,8 @@ from satellitecrops.eolearn.create_eopatches import create_sat_eopatches
 def create_patches():
     init_env()
     bucket = BucketConnector()
-    print(create_sat_eopatches(bucket, "30/T/XP", 2019))
+    bucket.upload_sat_patch("test", "test_dir")
+    #print(create_sat_eopatches(bucket, "30/T/XP", 2019))
 
 def main_local():
     init_env()
