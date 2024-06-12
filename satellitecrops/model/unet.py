@@ -7,7 +7,7 @@ from keras import Model
 from typing import Tuple
 from colorama import Fore, Style
 
-from satellitecrops.evaluation import metrics
+from satellitecrops.evaluation import metrics, ignore_class
 
 
 def unet(n_classes:int,
