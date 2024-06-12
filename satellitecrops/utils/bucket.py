@@ -12,8 +12,8 @@ class BucketConnector:
         self.bucket_name = bucket_name
         self.bucket = self.client.bucket(self.bucket_name)
 
-    def upload_sat_patch(self, eopatch, file_name, dir_path=f"eolearn_data/{ZONE_TYPE}/{DPT}"):
-        eopatch.save("/home/ken/tmp/eopatch", overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
+    def upload_sat_patch(self, file_name, dir_path=f"eolearn_data/{ZONE_TYPE}/{DPT}"):
+        #eopatch.save("/home/ken/tmp/eopatch", overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
         eopatch_folder = pathlib.Path("/home/ken/tmp/eopatch")
         eopatch_file_paths = [item for item in eopatch_folder.rglob("*") if item.is_file()]
         print(eopatch_file_paths)
