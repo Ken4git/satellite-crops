@@ -10,18 +10,19 @@ def create_npy_file():
     eo_loc = []
     bands = []
     masks = []
-
-    files = os.listdir(os.path.join(DATA_PATH, "eopatches"))
+    eopatches_path = os.path.join(DATA_PATH, "eopatches")
+    files = os.listdir(eopatches_path)
 
     for i in range(len(files) - 1):
-        eo_path = f"./eopatch_{i}/bbox.geojson"
+
+        eo_path = os.path.join(eopatches_path, f"eopatch_{i}", "bbox.geojson")
         eo_loc.append(gpd.read_file(eo_path))
 
-        mask_path = f"./eopatch_{i}/mask_timeless/MASK.npy.gz"
+        mask_path = os.path.join(eopatches_path, f"eopatch_{i}", "mask_timeless", "MASK.npy.gz")
         mask = gzip.GzipFile(mask_path, "r")
         masks.append(np.load(mask))
 
-        band_path = f"./eopatch_{i}/data_timeless/BANDS.npy.gz"
+        band_path = os.path.join(eopatches_path, f"eopatch_{i}", "data_timeless", "BANDS.npy.gz")
         band = gzip.GzipFile(band_path, "r")
         bands.append(np.load(band))
 
