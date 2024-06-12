@@ -120,6 +120,7 @@ def grid_search():
     batch_sizes = [4, 8, 16, 32]
     patience = [5, 10]
     for params in itertools.product(learning_rates, batch_sizes, patience):
+        print(f"--->New run with params {params[0]}, {params[1]}, {params[2]}")
         model, history = train(
             './data/departments/landes/eopatches',
             params[0],
