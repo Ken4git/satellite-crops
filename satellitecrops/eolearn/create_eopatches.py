@@ -49,11 +49,9 @@ def get_sat_image(bucket, bands=1):
 
 def create_sat_eopatch(sat_bounds, sat_image, save=False, file_name=None, dir_path=None, bucket=None):
     '''Create one eopatch for the whole sat image'''
+    print(f"eopatch {file_name} creation")
     sat_patch = EOPatch(bbox=BBox(bbox=sat_bounds, crs=LOCAL_CRS))
-    if sat_image.ndim == 3:
-        sat_patch.data_timeless["BANDS"] = sat_image
-    else:
-        sat_patch.data_timeless['BANDS'] = sat_image[..., np.newaxis]
+    sat_patch.data_timeless["BANDS"] = sat_image
     if save:
         bucket.upload_sat_patch(sat_patch, file_name, dir_path)
     else:
