@@ -1,6 +1,9 @@
 from google.cloud.storage import Client
 from satellitecrops.params import *
-
+from eolearn.core import (
+    EOPatch,
+    OverwritePermission
+    )
 
 class BucketConnector:
     def __init__(self, bucket_name="satellite_crops") -> None:
@@ -8,10 +11,11 @@ class BucketConnector:
         self.bucket_name = bucket_name
         self.bucket = self.client.bucket(self.bucket_name)
 
-    def upload(self, content, file_name, dir_path=f"eolearn_data/{ZONE_TYPE}/{DPT}"):
+    def upload_sat_patch(self, eopatch, file_name, dir_path=f"eolearn_data/{ZONE_TYPE}/{DPT}"):
+        eopatch.save("~/tmp/eopatch", overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
         blob_path = f"{dir_path}/{file_name}"
         blob = self.bucket.blob(blob_path)
-        blob.upload_from_string(content)
+        blob.upload_from_file("~/tmp/eopatch")
 
     def list_dir(self, dir_path):
         prefix=dir_path+"/"

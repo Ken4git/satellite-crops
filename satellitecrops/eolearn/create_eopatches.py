@@ -55,7 +55,7 @@ def create_sat_eopatch(sat_bounds, sat_image, save=False, file_name=None, dir_pa
     else:
         sat_patch.data_timeless['BANDS'] = sat_image[..., np.newaxis]
     if save:
-        bucket.upload(sat_patch, file_name, dir_path)
+        bucket.upload_sat_path(sat_patch, file_name, dir_path)
     else:
         return sat_patch
 
