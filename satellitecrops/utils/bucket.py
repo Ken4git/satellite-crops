@@ -13,16 +13,17 @@ class BucketConnector:
         self.bucket = self.client.bucket(self.bucket_name)
 
     def upload_sat_patch(self, eopatch, file_name, dir_path=f"eolearn_data/{ZONE_TYPE}/{DPT}"):
-        eopatch.save("/home/ken/tmp/eopatch", overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
+        eopatch.save("/home/ken/tmp/eopatch", overwrit_permission=OverwritePermission.OVERWRITE_FEATURES)
         eopatch_folder = pathlib.Path("/home/ken/tmp/eopatch")
         eopatch_file_paths = [item for item in eopatch_folder.rglob("*") if item.is_file()]
         print(eopatch_file_paths)
         relative_paths = [path.relative_to(eopatch_folder) for path in eopatch_file_paths]
         print(relative_paths)
         string_paths = [str(path) for path in relative_paths]
-        results = transfer_manager.upload_many_from_filenames(self.bucket, string_paths, source_directory=eopatch_folder)
-        return results
-
+        blob_name_prefix = os.path.join(dir_path, file_name)
+        results = transfer_manager.upload_many_from_filenames(self.bucket, string_paths, source_directory=eopatch_folder, blob_name_prefix=blob_name_prefix)
+        print(results)
+=file_name
     def list_dir(self, dir_path):
         prefix=dir_path+"/"
         return self.client.list_blobs(self.bucket_name, prefix=prefix)
