@@ -21,11 +21,14 @@ __pycache__
 # Data
 data/*
 results/*
+build/*
+logs/*
 
 notebooks/eoexecution*
 
 # Local env and credentials
 .env
+.env.yaml
 .envrc
 .venv*
 
