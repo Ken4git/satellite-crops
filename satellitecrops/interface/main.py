@@ -53,7 +53,8 @@ def train(
                  img_width=img_width,
                  optimizer=optimizer,
                  alpha=alpha,
-                 gamma=gamma)
+                 gamma=gamma,
+                 img_channels=channels)
 
     model, history = train_model(
         model,
