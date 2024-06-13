@@ -53,15 +53,20 @@ from satellitecrops.eolearn.create_eopatches import create_sat_eopatches
 def create_patches():
     init_env()
     bucket = BucketConnector()
-    create_sat_eopatches(bucket, "30/T/XP", 2019)
-    create_sat_eopatches(bucket, "30/T/XQ", 2019)
-    create_sat_eopatches(bucket, "30/T/YP", 2019)
     create_sat_eopatches(bucket, "30/T/YQ", 2019)
 
-def main_local():
+def enrich():
     init_env()
+    bucket = BucketConnector()
     print(Fore.MAGENTA + "\n⏳ Loading satellite image of the zone" + Style.RESET_ALL)
     sat_dir_path = os.path.join(DATA_PATH, "sat_images")
+    satpatches_bucket_path =  os.path.join(SAT_IMG_FOLDER, DPT_FOLDER)
+    satpatch_list=list(bucket.list_dir(satpatches_bucket_path))
+    satpatch_list = list(set([os.path.dirname(blob.name) for blob in satpatch_list]))
+    eopatch_folder = "/home/adbla/satellite-crops/data/departments/landes/eopatches"
+    with open(os.path.join("/home/ken/satellite-crops/data", "landes_eopatches_list")) as file:
+        eopatch_file_paths =  [line.rstrip() for line in file]
+
     add_data_from_sat_patches_to_eopatches(os.listdir(EOPATCH_FOLDER), sat_dir_path)
 
 if __name__ == "__main__":

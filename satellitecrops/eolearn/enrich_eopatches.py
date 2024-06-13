@@ -11,6 +11,7 @@ from eolearn.core import (
     )
 # geom manipulation
 import rasterio
+import geopandas as gpd
 from shapely.geometry import box
 
 def add_data2subpatch(sat_patch, eopatch):
@@ -86,19 +87,15 @@ def add_data_from_sat_patches_to_eopatches(eopatches_files, sat_patches_files):
     See add_data2subpatch(sat_patch, eopatch) function to see how the data is
     added to each subpatch
     '''
-    sat_patches = []
     for file_path in sat_patches_files:
-        with rasterio.open(file_path) as mosaic_data:
-            sat_geom = box(*mosaic_data.bounds)
-            sat_data = mosaic_data.read()
-        sat_patches.append({"geom": sat_geom, "data": sat_data})
-    for eo_file in eopatches_files:
-        eo_file_path = os.path.join(EOPATCH_FOLDER, eo_file)
-        eopatch = EOPatch.load(eo_file_path, lazy_loading=True)
-        for sat_patch in sat_patches:
-            if sat_patch['geom'].contains(eopatch.bbox.geometry):
+        sat_patch = EOPatch.load(file_path, lazy_loading=True)
+        for eo_file in eopatches_files:
+            bbox_file_path = os.path.join(eo_file, "bbox.geojson")
+            gdf =  gpd.read_file(bbox_file_path)
+            if sat_patch.bbox.geometry.contains(gdf['geometry'][0]):
+                eopatch = EOPatch.load(eo_file, lazy_loading=True)
                 new_eopatch = add_data2subpatch(sat_patch, eopatch)
-                new_eopatch.save(eo_file_path, overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
-                del new_eopatch
-                del eopatch
-                break
+                new_eopatch.save(eo_file, overwrite_permission=OverwritePermission.OVERWRITE_FEATURES)
+            del new_eopatch
+            del eopatch
+        del sat_patch
