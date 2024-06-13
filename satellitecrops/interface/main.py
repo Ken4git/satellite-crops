@@ -3,7 +3,7 @@ import tensorflow as tf
 from colorama import Fore, Style
 
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.optimizer import Adam
+from tensorflow.keras.optimizers import Adam
 
 from satellitecrops.params import *
 from satellitecrops.model.unet import unet, train_model
@@ -88,6 +88,6 @@ def train(
 
 if __name__ == '__main__':
     #preprocess()
-    train()
+    train("./data/departments/landes/eopatches")
     #evaluate()
     #pred()

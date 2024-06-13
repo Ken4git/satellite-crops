@@ -101,7 +101,7 @@ def unet(n_classes:int,
     outputs = Conv2D(n_classes, 1, activation='softmax', padding='same')(c9)
 
     model = Model(inputs=[s], outputs=[outputs])
-    model.compile(optimizer=optimizer, loss=tf.keras.losses.CategoricalFocalCrossentropy(alpha=alpha,gamma=gamma), metrics=metrics(n_classes))
+    model.compile(optimizer=optimizer, loss=categorical_focal_crossentropy_ignore, metrics=metrics(n_classes))
     model.summary()
 
     return model
