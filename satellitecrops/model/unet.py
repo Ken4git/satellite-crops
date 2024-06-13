@@ -2,12 +2,28 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, UpSampling2D, concatenate, Conv2DTranspose, BatchNormalization, Dropout, Lambda
 from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.losses import CategoricalFocalCrossentropy
 from keras import Model
 
 from typing import Tuple
 from colorama import Fore, Style
 
 from satellitecrops.evaluation import metrics
+
+def categorical_focal_crossentropy_ignore(y_true, y_pred):
+    print('y_true.shape: ', y_true.shape)
+    print('y_pred.shape: ', y_pred.shape)
+    background_classif_pixel = np.zeros(y_true.shape[-1])
+    background_classif_pixel[0] = 1
+    # Generate modified y_pred where all truly class0 pixels are correct
+    y_true_class0_indicies = tf.where(tf.math.equal(y_true, background_classif_pixel))
+    y_pred_updates = tf.repeat([
+        background_classif_pixel],
+        repeats=y_true_class0_indicies.shape[0],
+        axis=0)
+    yp = tf.tensor_scatter_nd_update(y_pred, y_true_class0_indicies, y_pred_updates)
+
+    return CategoricalFocalCrossentropy.call(y_true, yp)
 
 
 def unet(n_classes:int,
