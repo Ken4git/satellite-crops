@@ -29,3 +29,5 @@ DATA_PATH = os.path.join(os.path.dirname(os.getcwd()), "satellite-crops", "data"
 EOPATCH_FOLDER = os.path.join(DATA_PATH, "eopatches")
 EOPATCH_SAMPLES_FOLDER = os.path.join(DATA_PATH, "eopatches_sampled")
 RESULTS_FOLDER = os.path.join(DATA_PATH, "results")
+PXL_WIDTH = os.environ.get("PXL_WIDTH")
+PXL_HEIGHT = os.environ.get("PXL_HEIGHT")

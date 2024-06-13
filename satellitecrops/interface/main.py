@@ -37,7 +37,7 @@ def train(
     print(Fore.BLUE + "\nLoading preprocessed validation data..." + Style.RESET_ALL)
 
     # Create train and test set
-    X , y = create_Xy(path)
+    X , y = create_Xy(path, min_crops_coverage=0.1)
     y = clean_y(y)
     print(f"y cleaned. {y.shape}")
     y_cat = tf.keras.utils.to_categorical(y)
@@ -121,19 +121,19 @@ def grid_search():
     patience = [5, 10]
     for params in itertools.product(learning_rates, batch_sizes, patience):
         print(f"--->New run with params {params[0]}, {params[1]}, {params[2]}")
-        model, history = train(
+        train(
             './data/departments/landes/eopatches',
             params[0],
             params[1],
             params[2],
             grid_search=True
             )
-        models.append(model)
-        histories.append(history)
+        # models.append(model)
+        # histories.append(history)
 
 if __name__ == '__main__':
     #preprocess()
-    # train('./data/departments/landes/eopatches')
-    grid_search()
+    train('./data/departments/landes/eopatches')
+    # grid_search()
     #evaluate()
     #pred()
