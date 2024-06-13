@@ -10,20 +10,40 @@ from colorama import Fore, Style
 
 from satellitecrops.evaluation import metrics
 
-def categorical_focal_crossentropy_ignore(y_true, y_pred):
-    print('y_true.shape: ', y_true.shape)
-    print('y_pred.shape: ', y_pred.shape)
-    background_classif_pixel = np.zeros(y_true.shape[-1])
-    background_classif_pixel[0] = 1
-    # Generate modified y_pred where all truly class0 pixels are correct
-    y_true_class0_indicies = tf.where(tf.math.equal(y_true, background_classif_pixel))
-    y_pred_updates = tf.repeat([
-        background_classif_pixel],
-        repeats=y_true_class0_indicies.shape[0],
-        axis=0)
-    yp = tf.tensor_scatter_nd_update(y_pred, y_true_class0_indicies, y_pred_updates)
+class categorical_focal_crossentropy_ignore(CategoricalFocalCrossentropy):
+    def __init__(       self,
+        alpha=0.25,
+        gamma=2.0,
+        from_logits=False,
+        label_smoothing=0.0,
+        axis=-1,
+        reduction="sum_over_batch_size",
+        name="categorical_focal_crossentropy",):
+        super().__init__(
+             alpha=0.25,
+        gamma=2.0,
+        from_logits=False,
+        label_smoothing=0.0,
+        axis=-1,
+        reduction="sum_over_batch_size",
+        name="categorical_focal_crossentropy",
+        )
 
-    return CategoricalFocalCrossentropy.call(y_true, yp)
+    def call(y_true, y_pred):
+        print('y_true.shape: ', y_true.shape)
+        print('y_pred.shape: ', y_pred.shape)
+        background_classif_pixel = np.zeros(y_true.shape[-1])
+        background_classif_pixel[0] = 1
+        # Generate modified y_pred where all truly class0 pixels are correct
+        y_true_class0_indicies = tf.where(tf.math.equal(y_true, background_classif_pixel))
+        y_pred_updates = tf.repeat([
+            background_classif_pixel],
+            repeats=y_true_class0_indicies.shape[0],
+            axis=0)
+        yp = tf.tensor_scatter_nd_update(y_pred, y_true_class0_indicies, y_pred_updates)
+
+        return super.call(y_true, yp)
+
 
 
 def unet(n_classes:int,
@@ -101,7 +121,7 @@ def unet(n_classes:int,
     outputs = Conv2D(n_classes, 1, activation='softmax', padding='same')(c9)
 
     model = Model(inputs=[s], outputs=[outputs])
-    model.compile(optimizer=optimizer, loss=categorical_focal_crossentropy_ignore, metrics=metrics(n_classes))
+    model.compile(optimizer=optimizer, loss=categorical_focal_crossentropy_ignore(alpha=alpha,gamma=gamma), metrics=metrics(n_classes))
     model.summary()
 
     return model
