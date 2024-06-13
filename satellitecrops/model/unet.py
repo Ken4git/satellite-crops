@@ -30,21 +30,11 @@ class categorical_focal_crossentropy_ignore(CategoricalFocalCrossentropy):
         )
 
     def call(y_true, y_pred):
-        print('y_true.shape: ', y_true.shape)
-        print('y_pred.shape: ', y_pred.shape)
-        background_classif_pixel = np.zeros(y_true.shape[-1])
-        background_classif_pixel[0] = 1
-        # Generate modified y_pred where all truly class0 pixels are correct
-        y_true_class0_indicies = tf.where(tf.math.equal(y_true, background_classif_pixel))
-        y_pred_updates = tf.repeat([
-            background_classif_pixel],
-            repeats=y_true_class0_indicies.shape[0],
-            axis=0)
-        yp = tf.tensor_scatter_nd_update(y_pred, y_true_class0_indicies, y_pred_updates)
+        y_pred_masked = y_pred.copy()
+        y_pred_masked[y_true==0]=0
+        return super.call(y_true, y_pred_masked)
 
-        return super.call(y_true, yp)
-
-
+#python satellitecrops/interface/main.py
 
 def unet(n_classes:int,
          img_height:int,
