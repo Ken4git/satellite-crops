@@ -30,8 +30,12 @@ class categorical_focal_crossentropy_ignore(CategoricalFocalCrossentropy):
         )
 
     def call(y_true, y_pred):
+        mask_layer = y_true[:,:,0]
         y_pred_masked = y_pred.copy()
-        y_pred_masked[y_true==0]=0
+        inverse_mask_layer = (mask_layer*-1)+1
+        for i in range(1, y_pred.shape(-1)):
+            y_pred_masked[:,:,i] = y_pred[:,:,i]*inverse_mask_layer
+        y_pred_masked[:,:,0]=mask_layer
         return super.call(y_true, y_pred_masked)
 
 #python satellitecrops/interface/main.py

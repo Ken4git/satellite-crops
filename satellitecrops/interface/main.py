@@ -89,6 +89,6 @@ def train(
 
 if __name__ == '__main__':
     #preprocess()
-    train("./data/departments/landes/eopatches")
+    train("/home/adbla/satellite-crops/data/departments/landes/eopatches")
     #evaluate()
     #pred()
