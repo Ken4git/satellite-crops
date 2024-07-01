@@ -47,6 +47,16 @@ res = conn.select(query)
 
 
 # Data sources
-
-https://geoservices.ign.fr/telechargement-api/RPG
+## French agricultural parcels as declared to EU 
+- Description of data:
 GPKG are SQLite files
+- How to get it:
+https://geoservices.ign.fr/telechargement-api/RPG
+
+## Satellite images from Sentinel2 
+- Description of data: Satellite documents used are *Sentinel-2 Cloud-Optimized GeoTIFFs*. Each satellite view (a certain location at a certain date) is stored as a folder containing images from different spectral bandwidths and a description file.
+- How to get it: [Element 84 search API](https://earth-search.aws.element84.com/v1/search) returns as results, a list of URLs to satellite documents corresponding to the query. The satellite documents are then downloaded directly in a Google Bucket.
+  
+## Regional/departemental production per crop (France)
+- Description of data:
+- How to get it:
