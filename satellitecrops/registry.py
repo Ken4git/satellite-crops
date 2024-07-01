@@ -54,6 +54,7 @@ def save_model(model: keras.Model = None) -> None:
         client = storage.Client()
         bucket = client.bucket(BUCKET_NAME)
         blob = bucket.blob(f"models/{model_filename}")
+        print(list(bucket.list_blobs()))
         blob.upload_from_filename(model_path)
 
         print("✅ Model saved to GCS")
@@ -74,44 +75,45 @@ def load_model(stage="Production") -> keras.Model:
 
     """
 
-    if MODEL_TARGET == "local":
-        print(Fore.BLUE + f"\nLoad latest model from local registry..." + Style.RESET_ALL)
+    # if MODEL_TARGET == "local":
+    #     print(Fore.BLUE + f"\nLoad latest model from local registry..." + Style.RESET_ALL)
 
-        # Get the latest model version name by the timestamp on disk
-        local_model_directory = os.path.join(LOCAL_REGISTRY_PATH, "models")
-        local_model_paths = glob.glob(f"{local_model_directory}/*")
+    #     # Get the latest model version name by the timestamp on disk
+    #     local_model_directory = os.path.join(LOCAL_REGISTRY_PATH, "models")
+    #     local_model_paths = glob.glob(f"{local_model_directory}/*")
 
-        if not local_model_paths:
-            return None
+    #     if not local_model_paths:
+    #         return None
 
-        most_recent_model_path_on_disk = sorted(local_model_paths)[-1]
+    #     most_recent_model_path_on_disk = sorted(local_model_paths)[-1]
 
-        print(Fore.BLUE + f"\nLoad latest model from disk..." + Style.RESET_ALL)
+    #     print(Fore.BLUE + f"\nLoad latest model from disk..." + Style.RESET_ALL)
 
-        latest_model = keras.models.load_model(most_recent_model_path_on_disk)
+    #     latest_model = keras.models.load_model(most_recent_model_path_on_disk)
 
-        print("✅ Model loaded from local disk")
+    #     print("✅ Model loaded from local disk")
+
+    #     return latest_model
+
+    # elif MODEL_TARGET == "gcs":
+    #     # 🎁 We give you this piece of code as a gift. Please read it carefully! Add a breakpoint if needed!
+    print(Fore.BLUE + f"\nLoad latest model from GCS..." + Style.RESET_ALL)
+
+    client = storage.Client()
+    blobs = list(client.get_bucket(BUCKET_NAME).list_blobs(prefix="model"))
+
+    try:
+        latest_blob = max(blobs, key=lambda x: x.updated)
+        latest_model_path_to_save = os.path.join(LOCAL_REGISTRY_PATH, latest_blob.name)
+        latest_blob.download_to_filename(latest_model_path_to_save)
+
+        latest_model = keras.models.load_model(latest_model_path_to_save)
+
+        print("✅ Latest model downloaded from cloud storage")
 
         return latest_model
+    except Exception as e:
+        print("Exception raised on load_model function\n", e)
+        print(f"\n❌ No model found in GCS bucket {BUCKET_NAME}")
 
-    elif MODEL_TARGET == "gcs":
-        # 🎁 We give you this piece of code as a gift. Please read it carefully! Add a breakpoint if needed!
-        print(Fore.BLUE + f"\nLoad latest model from GCS..." + Style.RESET_ALL)
-
-        client = storage.Client()
-        blobs = list(client.get_bucket(BUCKET_NAME).list_blobs(prefix="model"))
-
-        try:
-            latest_blob = max(blobs, key=lambda x: x.updated)
-            latest_model_path_to_save = os.path.join(LOCAL_REGISTRY_PATH, latest_blob.name)
-            latest_blob.download_to_filename(latest_model_path_to_save)
-
-            latest_model = keras.models.load_model(latest_model_path_to_save)
-
-            print("✅ Latest model downloaded from cloud storage")
-
-            return latest_model
-        except:
-            print(f"\n❌ No model found in GCS bucket {BUCKET_NAME}")
-
-            return None
+        return None

@@ -6,7 +6,7 @@ import matplotlib as mpl
 import numpy as np
 import pandas as pd
 
-def metrics(n_classes:int, ignore_class:int=None, sparse_y_pred:bool=False, sparse_y_true:bool=False):
+def metrics(n_classes:int, ignore_class:int=0, sparse_y_pred:bool=False, sparse_y_true:bool=False):
     '''
     Returns a list of metrics containing the mean Intersection-Over-Union metric (meanIoU) and the IoU for each predicted class.
 
@@ -16,7 +16,7 @@ def metrics(n_classes:int, ignore_class:int=None, sparse_y_pred:bool=False, spar
     ignore_class: Optional integer. The ID of a class to be ignored during meanIoU computation.
     '''
 
-    l = [MeanIoU(num_classes=n_classes, sparse_y_pred=sparse_y_pred, sparse_y_true=sparse_y_true)]
+    l = [MeanIoU(num_classes=n_classes, sparse_y_pred=sparse_y_pred, sparse_y_true=sparse_y_true, ignore_class=ignore_class)]
 
     for i in range(n_classes):
         l.append(IoU(num_classes=n_classes,
@@ -26,6 +26,16 @@ def metrics(n_classes:int, ignore_class:int=None, sparse_y_pred:bool=False, spar
 
     return l
 
+def ignore_class(y:np.ndarray, threshold:float=0.05):
+    '''Returns a list of classes not significant (< Threshold). Includes by default 0 in the list which correspond to the background. '''
+    unique, count = np.unique(y, return_counts=True)
+    prop = np.round(count / count.sum() * 100, 2)
+
+    df = pd.DataFrame({'Id':unique, 'Prop':prop}).sort_values('Prop', ascending=False)
+
+    l = df[df.Prop < threshold].Id.to_list()
+    l.append(0)
+    return l
 
 def plot_multiple_lc(history:dict, classes:list, mapping:dict):
     '''
