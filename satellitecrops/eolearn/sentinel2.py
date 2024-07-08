@@ -3,6 +3,7 @@ from datetime import datetime
 from google.cloud import storage
 from google.cloud import storage_transfer
 
+
 from satellitecrops.params import GOOGLE_APPLICATION_CREDENTIALS
 
 import json
@@ -19,7 +20,13 @@ def get_satellite_data(bbox, year, datetime_range, limit=200):
     causing the API to not respond. For this concern, we suggest using per_trimester requests or
     even per_month requests. The size of the bbox influences also the number of results.
     Returns:
-    A list of urls and a dict of properties'''
+    A list of urls and a dict of properties
+    Example:
+    bbox_landes = [-1.52487, 43.487949, 0.136726,44.532196]
+    datetime_range = "2019-08-01T00:00:00Z/2019-08-31T12:31:12Z"
+    year = 2019
+    get_satellite_data(bbox_landes, year, datetime_range, limit=2)
+    '''
     url = 'https://earth-search.aws.element84.com/v1/search'
     data={"bbox": bbox,
          "datetime": datetime_range,
@@ -129,6 +136,11 @@ def eo_feature2properties_dict(eo_feature):
     return properties_dict
 
 def urls2file(file_path, urls_list):
+    '''
+    Example:
+    urls, properties_dict = get_satellite_data(bbox_landes, 2019, limit=160)
+    urls2file("data/sentinel2_data_examples/url_list_file.tsv", urls)
+    '''
     with open(file_path, "w") as file:
         file.writelines("TsvHttpData-1.0\n") # requested head line for creating gcp transfer job from list of urls file
         for url in urls_list:
@@ -169,8 +181,6 @@ def create_one_time_http_transfer(
             }
         }
     )
-from google.cloud import storage_transfer
-from datetime import datetime
 
 def create_one_time_http_transfer(
     project_id: str,
@@ -220,19 +230,26 @@ def upload_to_storage_and_return_token(
     blob.upload_from_filename(file_input_path)
     return blob.generate_signed_url(datetime.now())
 
-bbox_landes = [-1.52487, 43.487949, 0.136726,44.532196]
-bbox_landes
-
-def upload_satellite_data_to_bucket(bbox, year, limit=200)
+def upload_satellite_data_to_bucket(bbox, year, limit=200):
     '''Currently the only uploaded file is the list of urls and a signed url,
     i.e. a url containing a time limited token for identification, is returned.
     Use this signe url to create and launch a job transfer on the bucket
     (a list of urls based job transfer).'''
     urls, properties_dict = get_satellite_data_per_year(bbox, year, limit)
     # locally save the files
-    urls2file("../../url_list_file.tsv", urls)
-    with open("../../sat_data_properties.json", "w") as file:
+    urls2file("data/url_list_file.tsv", urls)
+    with open("data/sat_data_properties.json", "w") as file:
         json.dump(properties_dict, file)
-    upload_to_storage_and_return_token("../../url_list_file.tsv",
+    return upload_to_storage_and_return_token("data/url_list_file.tsv",
                                     "test_download_from_url/url_list_file-2.tsv",
                                     "satellite_crops")
+
+if __name__=='__main__':
+    bbox_landes = [-1.52487, 43.487949, 0.136726,44.532196]
+    datetime_range = "2019-08-01T00:00:00Z/2019-08-31T12:31:12Z"
+    year = 2019
+    urls, properties_dict = get_satellite_data(bbox_landes, year, datetime_range, limit=2)
+    urls2file("data/sentinel2_data_examples/url_list_file.tsv", urls)
+    with open("data/sentinel2_data_examples/sat_data_properties.json", "w") as file:
+        json.dump(properties_dict, file)
+    #upload_to_storage_and_return_token("../url_list_file.tsv", "test_download_from_url/url_list_file-2.tsv", "satellite_crops")
