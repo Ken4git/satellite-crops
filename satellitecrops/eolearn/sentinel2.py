@@ -2,12 +2,17 @@ import requests
 from datetime import datetime
 from google.cloud import storage
 from google.cloud import storage_transfer
+import os
 
 
 from satellitecrops.params import GOOGLE_APPLICATION_CREDENTIALS
+from satellitecrops.params import GCP_PROJECT, BUCKET_NAME
+from satellitecrops.params import DATA_DIR_LOCAL
 
 import json
 
+# Customized stdout printing
+from colorama import Fore, Style
 
 def get_satellite_data(bbox, year, datetime_range, limit=200):
     '''Return urls of SAFE files (Standard Archive Format for Europe)
@@ -147,55 +152,20 @@ def urls2file(file_path, urls_list):
             file.writelines(url+"\n")
 
 def create_one_time_http_transfer(
-    description: str,
     list_url: str,
-    sink_bucket: str,
-    project_id: str="satellite-crops"
-):
-    """Creates a one-time transfer job from Amazon S3 to Google Cloud
-    Storage."""
-    storage_client = storage.Client.from_service_account_json(GOOGLE_APPLICATION_CREDENTIALS)
-
-    client = storage_transfer.StorageTransferServiceClient()
-
-    now = datetime.now(datetime.UTC)
-    # the same time creates a one-time transfer
-    one_time_schedule = {"day": now.day, "month": now.month, "year": now.year}
-
-    transfer_job_request = storage_transfer.CreateTransferJobRequest(
-        {
-            "transfer_job": {
-                "project_id": project_id,
-                "description": description,
-                "status": storage_transfer.TransferJob.Status.ENABLED,
-                "schedule": {
-                    "schedule_start_date": one_time_schedule,
-                    "schedule_end_date": one_time_schedule,
-                },
-                "transfer_spec": {
-                    "http_data_source": storage_transfer.HttpData(list_url=list_url),
-                    "gcs_data_sink": {
-                        "bucket_name": sink_bucket,
-                    },
-                },
-            }
-        }
-    )
-
-def create_one_time_http_transfer(
-    project_id: str,
-    description: str,
-    list_url: str,
-    sink_bucket: str,
+    sink_bucket: str=BUCKET_NAME,
+    description: str="one time http transfer of sentinel2 data",
+    project_id: str=GCP_PROJECT
 ):
     """Creates a one-time transfer job from Amazon S3 to Google Cloud
     Storage."""
 
     client = storage_transfer.StorageTransferServiceClient()
 
+    now = datetime.now()
     # the same time creates a one-time transfer
     one_time_schedule = {"day": now.day, "month": now.month, "year": now.year}
-
+    print(f"#############  Project_id #############\n {project_id}")
     transfer_job_request = storage_transfer.CreateTransferJobRequest(
         {
             "transfer_job": {
@@ -237,19 +207,32 @@ def upload_satellite_data_to_bucket(bbox, year, limit=200):
     (a list of urls based job transfer).'''
     urls, properties_dict = get_satellite_data_per_year(bbox, year, limit)
     # locally save the files
-    urls2file("data/url_list_file.tsv", urls)
-    with open("data/sat_data_properties.json", "w") as file:
+    urls_list_path = os.path.join("data", "url_list_file.tsv")
+    sat_data_properties_path = os.path.join("data", "sat_data_properties.json")
+    urls2file(urls_list_path, urls)
+    with open(sat_data_properties_path, "w") as file:
         json.dump(properties_dict, file)
-    return upload_to_storage_and_return_token("data/url_list_file.tsv",
-                                    "test_download_from_url/url_list_file-2.tsv",
-                                    "satellite_crops")
+    return upload_to_storage_and_return_token(urls_list_path,
+                                    "downloads_from_url/url_list_file.tsv",
+                                    BUCKET_NAME)
 
 if __name__=='__main__':
     bbox_landes = [-1.52487, 43.487949, 0.136726,44.532196]
     datetime_range = "2019-08-01T00:00:00Z/2019-08-31T12:31:12Z"
     year = 2019
+    print(Fore.MAGENTA + "\n⏳ Get satellite data urls" + Style.RESET_ALL)
     urls, properties_dict = get_satellite_data(bbox_landes, year, datetime_range, limit=2)
-    urls2file("data/sentinel2_data_examples/url_list_file.tsv", urls)
-    with open("data/sentinel2_data_examples/sat_data_properties.json", "w") as file:
+    print("✅ Satellite data urls gotten")
+    print(Fore.MAGENTA + "\n⏳ Save urls and data properties to local files" + Style.RESET_ALL)
+    urls_list_path = os.path.join("data", "sentinel2_data_examples", "url_list_file.tsv")
+    sat_data_properties_path = os.path.join("data", "sentinel2_data_examples", "sat_data_properties.json")
+    urls2file(urls_list_path, urls)
+    with open(sat_data_properties_path, "w") as file:
         json.dump(properties_dict, file)
-    #upload_to_storage_and_return_token("../url_list_file.tsv", "test_download_from_url/url_list_file-2.tsv", "satellite_crops")
+    print("✅ Urls and properties saved locally")
+    print(Fore.MAGENTA + "\n⏳ Upload urls list file to bucket" + Style.RESET_ALL)
+    tsv_url = upload_to_storage_and_return_token(urls_list_path, "test_download_from_url/url_list_file.tsv", BUCKET_NAME)
+    print("✅ Urls file saved to bucket, url of this file on bucket with access token obtained")
+    print(Fore.MAGENTA + "\n⏳ Create and launch one time transfer" + Style.RESET_ALL)
+    create_one_time_http_transfer(list_url=tsv_url)
+    print("✅ Files tranfered from urls to bucket")
