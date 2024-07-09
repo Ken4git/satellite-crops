@@ -2,10 +2,11 @@ import os
 import pandas as pd
 
 ### GCP ###
-
-GCP_PROJECT_NAME = os.environ.get("GCP_PROJECT_NAME")
+GCP_PROJECT = os.environ.get("GCP_PROJECT")
 GCP_REGION = os.environ.get("GCP_REGION")
 BUCKET_NAME = os.environ.get("BUCKET_NAME")
+GOOGLE_APPLICATION_CREDENTIALS = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")
+
 # Compute Engine
 INSTANCE=os.environ.get("INSTANCE")
 
