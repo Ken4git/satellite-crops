@@ -151,21 +151,23 @@ def urls2file(file_path, urls_list):
         for url in urls_list:
             file.writelines(url+"\n")
 
-def create_one_time_http_transfer(
+def one_time_immediate_http_transfer(
     list_url: str,
+    sink_folder_in_bucket: str="sink_folder/",
     sink_bucket: str=BUCKET_NAME,
     description: str="one time http transfer of sentinel2 data",
     project_id: str=GCP_PROJECT
 ):
-    """Creates a one-time transfer job from Amazon S3 to Google Cloud
-    Storage."""
+    """Creates a one-time immediate transfer job from Amazon S3 to Google Cloud
+    Storage.
+    Attention: sink_folder_in_bucket must end with a '/', it's a folder path
+    in the bucket"""
 
     client = storage_transfer.StorageTransferServiceClient()
 
     now = datetime.now()
     # the same time creates a one-time transfer
     one_time_schedule = {"day": now.day, "month": now.month, "year": now.year}
-    print(f"#############  Project_id #############\n {project_id}")
     transfer_job_request = storage_transfer.CreateTransferJobRequest(
         {
             "transfer_job": {
@@ -180,6 +182,7 @@ def create_one_time_http_transfer(
                     "http_data_source": storage_transfer.HttpData(list_url=list_url),
                     "gcs_data_sink": {
                         "bucket_name": sink_bucket,
+                        "path": sink_folder_in_bucket
                     },
                 },
             }
@@ -187,11 +190,13 @@ def create_one_time_http_transfer(
     )
 
     result = client.create_transfer_job(transfer_job_request)
-    print(f"Created transferJob: {result.name}")
+    print(f"Created immediate_http_transfer Job: {result.name}")
 
-def upload_to_storage_and_return_token(
+def upload_to_storage_and_return_signed_url(
     file_input_path: str, file_output_path: str, bucket_name: str
 ) -> str:
+    '''Upload a local file to bucket and return a signed url (url + access token)
+    usable during 15 minutes'''
     gcs = storage.Client.from_service_account_json(GOOGLE_APPLICATION_CREDENTIALS)
     # # Get the bucket that the file will be uploaded to.
     bucket = gcs.bucket(bucket_name)
@@ -205,34 +210,41 @@ def upload_satellite_data_to_bucket(bbox, year, limit=200):
     i.e. a url containing a time limited token for identification, is returned.
     Use this signe url to create and launch a job transfer on the bucket
     (a list of urls based job transfer).'''
+    print(Fore.LIGHTCYAN_EX + "\n⏳ Get satellite data urls" + Style.RESET_ALL)
     urls, properties_dict = get_satellite_data_per_year(bbox, year, limit)
-    # locally save the files
-    urls_list_path = os.path.join("data", "url_list_file.tsv")
+    print("✅ Satellite data urls gotten")
+    print(Fore.LIGHTCYAN_EX + "\n⏳ Save urls and data properties to local files" + Style.RESET_ALL)
+    urls_list_path = os.path.join("data", "sentinel2_data_examples", "url_list_file.tsv")
     sat_data_properties_path = os.path.join("data", "sat_data_properties.json")
     urls2file(urls_list_path, urls)
     with open(sat_data_properties_path, "w") as file:
         json.dump(properties_dict, file)
-    return upload_to_storage_and_return_token(urls_list_path,
-                                    "downloads_from_url/url_list_file.tsv",
-                                    BUCKET_NAME)
+    print("✅ Urls and properties saved locally")
+    print(Fore.LIGHTCYAN_EX + "\n⏳ Upload urls list file to bucket" + Style.RESET_ALL)
+    tsv_url = upload_to_storage_and_return_signed_url(urls_list_path, "sentinel2_row_data/url_list_file.tsv", BUCKET_NAME)
+    print("✅ Urls file saved to bucket, url of this file on bucket with access token obtained")
+    print(Fore.LIGHTCYAN_EX + "\n⏳ Create and launch one time transfer" + Style.RESET_ALL)
+    one_time_immediate_http_transfer(list_url=tsv_url, sink_folder_in_bucket="sentinel2_row_data/")
+    print("✅ Files tranfered from urls to bucket\n")
 
 if __name__=='__main__':
+    # test upload_satellite_data_to_bucket with few examples
     bbox_landes = [-1.52487, 43.487949, 0.136726,44.532196]
     datetime_range = "2019-08-01T00:00:00Z/2019-08-31T12:31:12Z"
     year = 2019
-    print(Fore.MAGENTA + "\n⏳ Get satellite data urls" + Style.RESET_ALL)
-    urls, properties_dict = get_satellite_data(bbox_landes, year, datetime_range, limit=2)
+    print(Fore.LIGHTCYAN_EX + "\n⏳ Get satellite data urls" + Style.RESET_ALL)
+    urls, properties_dict = get_satellite_data(bbox_landes, year, datetime_range=datetime_range, limit=2)
     print("✅ Satellite data urls gotten")
-    print(Fore.MAGENTA + "\n⏳ Save urls and data properties to local files" + Style.RESET_ALL)
+    print(Fore.LIGHTCYAN_EX + "\n⏳ Save urls and data properties to local files" + Style.RESET_ALL)
     urls_list_path = os.path.join("data", "sentinel2_data_examples", "url_list_file.tsv")
-    sat_data_properties_path = os.path.join("data", "sentinel2_data_examples", "sat_data_properties.json")
+    sat_data_properties_path = os.path.join("data", "sat_data_properties.json")
     urls2file(urls_list_path, urls)
     with open(sat_data_properties_path, "w") as file:
         json.dump(properties_dict, file)
     print("✅ Urls and properties saved locally")
-    print(Fore.MAGENTA + "\n⏳ Upload urls list file to bucket" + Style.RESET_ALL)
-    tsv_url = upload_to_storage_and_return_token(urls_list_path, "test_download_from_url/url_list_file.tsv", BUCKET_NAME)
+    print(Fore.LIGHTCYAN_EX + "\n⏳ Upload urls list file to bucket" + Style.RESET_ALL)
+    tsv_url = upload_to_storage_and_return_signed_url(urls_list_path, "sentinel2_row_data/url_list_file.tsv", BUCKET_NAME)
     print("✅ Urls file saved to bucket, url of this file on bucket with access token obtained")
-    print(Fore.MAGENTA + "\n⏳ Create and launch one time transfer" + Style.RESET_ALL)
-    create_one_time_http_transfer(list_url=tsv_url)
-    print("✅ Files tranfered from urls to bucket")
+    print(Fore.LIGHTCYAN_EX + "\n⏳ Create and launch one time transfer" + Style.RESET_ALL)
+    one_time_immediate_http_transfer(list_url=tsv_url, sink_folder_in_bucket="sentinel2_row_data/")
+    print("✅ Files tranfered from urls to bucket\n")
